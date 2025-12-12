@@ -25,12 +25,9 @@ export default function GuessingGridCellComponent({
     onRightClick()
   }
 
-  const attrs = useLongPress(
-    () => onRightClick,
-    {
-      threshold: 300,
-    }
-  );
+  const attrs = useLongPress(() => onRightClick, {
+    threshold: 300,
+  })
 
   return (
     <span

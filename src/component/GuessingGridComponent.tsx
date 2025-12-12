@@ -49,7 +49,11 @@ export default function GuessingGridComponent({
         (letter: Letter): JSX.Element => (
           <Fragment key={letter}>
             <div
-              className={letter === hoveredLetter ? "guessing-legend highlighted" : "guessing-legend"}
+              className={
+                letter === hoveredLetter ?
+                  "guessing-legend highlighted"
+                : "guessing-legend"
+              }
             >
               {letter}
             </div>
