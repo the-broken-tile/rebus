@@ -5,7 +5,6 @@ import Digit from "./Digit"
 import LettersProvider from "./LettersProvider"
 import config from "./config.json"
 import GuessingGrid from "./GuessingGrid"
-import { symbolsProvider } from "./container"
 
 const LARGEST_NUMBER = 999
 const SMALLEST_NUMBER = 100
