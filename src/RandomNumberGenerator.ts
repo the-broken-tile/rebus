@@ -1,9 +1,10 @@
 import Rand from "rand-seed"
+import {randomNumberGenerator} from "./container";
 
 export default class RandomNumberGenerator {
   private rand: Rand
   constructor(private _seed: string) {
-    this.rand = new Rand()
+    this.rand = new Rand(this._seed)
   }
 
   set seed(seed: string) {
