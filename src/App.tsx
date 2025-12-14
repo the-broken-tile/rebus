@@ -9,8 +9,10 @@ import GuessingGridComponent from "./component/GuessingGridComponent"
 import config from "./config.json"
 import HoveredContext from "./HoveredContext"
 import PuzzleContext from "./PuzzleContext"
-import Dialog from "./component/Dialog"
-import useKeyPress from "./useKeyPress"
+import useKeyPress from "./hooks/useKeyPress"
+import useTimer from "./hooks/useTimer"
+import WinningDialog from "./component/WinningDialog"
+import useDocumentVisibility from "./hooks/useDocumentVisibility"
 
 if (config.debug) {
   randomNumberGenerator.seed = "1337"
@@ -23,10 +25,30 @@ export default function App(): JSX.Element {
     undefined,
   )
   const [hoveredDigit, setHoveredDigit] = useState<Digit | undefined>(undefined)
+  const { time, start, stop } = useTimer(true)
+  const { visible } = useDocumentVisibility()
 
   useEffect((): void => {
     setHistory([gameGenerator.generate()])
   }, [])
+
+  useEffect((): void => {
+    if (!solved) {
+      return
+    }
+
+    stop()
+  }, [solved])
+
+  useEffect((): void => {
+    if (visible) {
+      start()
+
+      return
+    }
+
+    stop()
+  }, [visible])
 
   useEffect((): void => {
     if (history.length === 0) {
@@ -114,7 +136,7 @@ export default function App(): JSX.Element {
           onLetterHover: handleLetterHover,
         }}
       >
-        {solved && <Dialog>You won</Dialog>}
+        <WinningDialog time={time} />
         <GuessingGridComponent
           onLeftClick={handleGuessClick}
           onRightClick={handleRightClick}

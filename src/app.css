@@ -5,7 +5,6 @@ body {
   font-family: sans-serif;
   font-size: 18px;
   height: 100vh;
-  user-select: none;
   overflow: hidden;
 }
 
@@ -20,6 +19,7 @@ body {
   display: grid;
   grid-template-columns: repeat(11, calc(100% / 11));
   grid-template-rows: repeat(10, 10%);
+  user-select: none;
 }
 
 .grid {
@@ -27,6 +27,7 @@ body {
   display: grid;
   grid-template-columns: 30% 1fr 30% 1fr 30%;
   grid-template-rows: 30% 1fr 30% 1fr 30%;
+  user-select: none;
 }
 
 .number {
@@ -89,7 +90,7 @@ body {
   padding: 0 0.3em;
 }
 
-#dialog {
+.dialog {
   position: fixed;
   top: 20%;
   left: 20%;
@@ -98,11 +99,27 @@ body {
   z-index: 2;
   background: whitesmoke;
   opacity: 0.8;
+}
+
+#winning-dialog {
   display: flex;
   justify-content: center;
-  align-items: center;
+  /*align-items: center;*/
   text-align: center;
-  font-size: 4em;
+  font-size: 3em;
+  flex-direction: column;
+}
+
+#close-dialog {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+#close-dialog:after {
+  content: "x";
 }
 
 @media (orientation: portrait) {
