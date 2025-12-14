@@ -2,8 +2,8 @@ import { JSX, useState } from "react"
 import Dialog from "./Dialog"
 import { usePuzzleContext } from "../PuzzleContext"
 import formatDuration from "../util/formatTime"
-import Digit from "../Digit"
-import Letter from "../Letter"
+import Digit from "../models/Digit"
+import Letter from "../models/Letter"
 
 type Props = {
   time: number

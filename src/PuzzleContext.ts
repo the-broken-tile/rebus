@@ -1,5 +1,5 @@
 import { Context, createContext, useContext } from "react"
-import Puzzle from "./Puzzle"
+import Puzzle from "./models/Puzzle"
 
 type ContextShape = {
   puzzle: Puzzle

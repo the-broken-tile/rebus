@@ -1,10 +1,10 @@
-import Puzzle from "./Puzzle"
-import Letter from "./Letter"
+import Puzzle from "../models/Puzzle"
+import Letter from "../models/Letter"
 import RandomNumberGenerator from "./RandomNumberGenerator"
-import Digit from "./Digit"
+import Digit from "../models/Digit"
 import LettersProvider from "./LettersProvider"
-import config from "./config.json"
-import GuessingGrid from "./GuessingGrid"
+import config from "../config.json"
+import GuessingGrid from "../models/GuessingGrid"
 
 const LARGEST_NUMBER = 999
 const SMALLEST_NUMBER = 100
@@ -26,6 +26,7 @@ export default class GameGenerator {
     const numbers: Grid = this.generateNumber()
 
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
+      this.randomNumberGenerator.seed,
       this.lettersToNumbersMap(),
       [
         [numbers[0][0], numbers[0][1], this.sum(numbers[0])],

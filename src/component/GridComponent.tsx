@@ -2,7 +2,7 @@ import { Fragment, JSX } from "react"
 import { Row } from "../Grid"
 import DigitComponent from "./DigitComponent"
 import SignComponent from "./SignComponent"
-import Sign from "../Sign"
+import Sign from "../models/Sign"
 import { usePuzzleContext } from "../PuzzleContext"
 import UndoButton from "./UndoButton"
 

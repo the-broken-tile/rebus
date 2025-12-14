@@ -1,7 +1,7 @@
 import { JSX, useContext } from "react"
 import split from "../util/split"
-import Letter from "../Letter"
-import Digit from "../Digit"
+import Letter from "../models/Letter"
+import Digit from "../models/Digit"
 import HoveredContext from "../HoveredContext"
 import { usePuzzleContext } from "../PuzzleContext"
 

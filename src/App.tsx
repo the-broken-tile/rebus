@@ -1,26 +1,26 @@
 import { JSX, useEffect, useState } from "react"
-import { gameGenerator, randomNumberGenerator } from "./container"
 import "./app.css"
-import Puzzle from "./Puzzle"
-import Letter from "./Letter"
-import Digit from "./Digit"
-import GridComponent from "./component/GridComponent"
-import GuessingGridComponent from "./component/GuessingGridComponent"
-import config from "./config.json"
+import Puzzle from "./models/Puzzle"
+import Letter from "./models/Letter"
+import Digit from "./models/Digit"
+
 import HoveredContext from "./HoveredContext"
 import PuzzleContext from "./PuzzleContext"
+
+import GridComponent from "./component/GridComponent"
+import GuessingGridComponent from "./component/GuessingGridComponent"
+import WinningDialog from "./component/WinningDialog"
+
 import useKeyPress from "./hooks/useKeyPress"
 import useTimer from "./hooks/useTimer"
-import WinningDialog from "./component/WinningDialog"
 import useDocumentVisibility from "./hooks/useDocumentVisibility"
-
-if (config.debug) {
-  randomNumberGenerator.seed = "1337"
-}
+import useContainer from "./hooks/useContainer"
 
 export default function App(): JSX.Element {
+  const { puzzleProvider, cache } = useContainer()
   const [history, setHistory] = useState<Puzzle[]>([])
   const [solved, setSolved] = useState<boolean>(false)
+  const [puzzle, setPuzzle] = useState<Puzzle | null>(null)
   const [hoveredLetter, setHoveredLetter] = useState<Letter | undefined>(
     undefined,
   )
@@ -29,7 +29,7 @@ export default function App(): JSX.Element {
   const { visible } = useDocumentVisibility()
 
   useEffect((): void => {
-    setHistory([gameGenerator.generate()])
+    setHistory(puzzleProvider.get())
   }, [])
 
   useEffect((): void => {
@@ -41,7 +41,7 @@ export default function App(): JSX.Element {
   }, [solved])
 
   useEffect((): void => {
-    if (visible && !history[history.length - 1].isSolved()) {
+    if (visible && puzzle !== null) {
       start()
 
       return
@@ -51,12 +51,24 @@ export default function App(): JSX.Element {
   }, [visible])
 
   useEffect((): void => {
-    if (history.length === 0) {
+    if (puzzle === null) {
       return
     }
-    if (history[history.length - 1].isSolved()) {
+
+    if (puzzle.isSolved()) {
       setSolved(true)
     }
+  }, [puzzle])
+
+  useEffect((): void => {
+    const currentState: Puzzle | undefined = history[history.length - 1]
+    if (currentState) {
+      setPuzzle(currentState)
+    }
+  }, [history.length])
+
+  useEffect((): void => {
+    cache.save(history)
   }, [history.length])
 
   useKeyPress({
@@ -67,8 +79,7 @@ export default function App(): JSX.Element {
   })
 
   const handleGuessClick = (letter: Letter, digit: Digit): void => {
-    const puzzle: Puzzle | undefined = history[history.length - 1]
-    if (puzzle === undefined) {
+    if (puzzle === null) {
       return
     }
 
@@ -87,11 +98,10 @@ export default function App(): JSX.Element {
   }
 
   const handleRightClick = (letter: Letter, digit: Digit): void => {
-    if (history.length === 0) {
+    if (puzzle === null) {
       return
     }
 
-    const puzzle: Puzzle = history[history.length - 1]
     const currentGuess: "unknown" | "yes" | "no" = puzzle.getGuess(
       letter,
       digit,
@@ -114,10 +124,6 @@ export default function App(): JSX.Element {
     setHoveredDigit(digit)
   }
 
-  if (history.length < 1) {
-    return <>loading</>
-  }
-
   const undo = (): void => {
     if (history.length <= 1) {
       return
@@ -126,8 +132,12 @@ export default function App(): JSX.Element {
     setHistory(history.slice(0, history.length - 1))
   }
 
+  if (puzzle === null) {
+    return <>loading</>
+  }
+
   return (
-    <PuzzleContext value={{ puzzle: history[history.length - 1], undo }}>
+    <PuzzleContext value={{ puzzle, undo }}>
       <HoveredContext
         value={{
           digit: hoveredDigit,

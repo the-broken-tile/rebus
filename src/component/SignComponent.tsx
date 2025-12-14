@@ -1,5 +1,5 @@
 import { JSX, ReactNode } from "react"
-import Sign from "../Sign"
+import Sign from "../models/Sign"
 
 type Props = {
   sign: Sign

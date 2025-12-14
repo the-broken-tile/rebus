@@ -1,4 +1,4 @@
-import { Guess } from "./Guess"
+import Guess from "./Guess"
 import Letter from "./Letter"
 import Digit from "./Digit"
 import GuessValue from "./GuessValue"

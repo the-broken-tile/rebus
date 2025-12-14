@@ -1,6 +1,6 @@
 import { JSX, SyntheticEvent } from "react"
-import Digit from "../Digit"
-import { Guess } from "../Guess"
+import Digit from "../models/Digit"
+import Guess from "../models/Guess"
 import { useLongPress } from "@uidotdev/usehooks"
 
 type Props = {

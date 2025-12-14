@@ -1,12 +1,13 @@
 import Letter from "./Letter"
-import Grid, { Row } from "./Grid"
+import Grid, { Row } from "../Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
-import { Guess } from "./Guess"
+import Guess from "./Guess"
 import GuessValue from "./GuessValue"
 
 export default class Puzzle {
   constructor(
+    public readonly seed: string,
     public readonly lettersToNumbers: Record<Letter, Digit>,
     private grid: Grid<number>,
     public readonly guessingGrid: GuessingGrid,
@@ -39,12 +40,22 @@ export default class Puzzle {
     return this.guessingGrid.guesses
   }
 
+  public setGuesses(guesses: Guess[]): Puzzle {
+    return new Puzzle(
+      this.seed,
+      this.lettersToNumbers,
+      this.grid,
+      new GuessingGrid(guesses),
+    )
+  }
+
   public getGuess(letter: Letter, digit: Digit): Guess {
     return this.guessingGrid.getGuess(letter, digit)
   }
 
   public setGuess(letter: Letter, digit: Digit, guess: GuessValue): Puzzle {
     return new Puzzle(
+      this.seed,
       this.lettersToNumbers,
       this.grid,
       this.guessingGrid.setGuess(letter, digit, guess),

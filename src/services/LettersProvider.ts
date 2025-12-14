@@ -1,7 +1,9 @@
-import Letter from "./Letter"
+import config from "../config.json"
+
+import Letter from "../models/Letter"
+import Digit from "../models/Digit"
+
 import RandomNumberGenerator from "./RandomNumberGenerator"
-import Digit from "./Digit"
-import config from "./config.json"
 
 export default class LettersProvider {
   private cache: Record<string, Letter[]> = {}
