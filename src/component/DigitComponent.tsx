@@ -3,7 +3,6 @@ import split from "../util/split"
 import Letter from "../Letter"
 import Digit from "../Digit"
 import HoveredContext from "../HoveredContext"
-import Puzzle from "../Puzzle"
 import { usePuzzleContext } from "../PuzzleContext"
 
 type Props = {
@@ -11,7 +10,7 @@ type Props = {
 }
 
 export default function DigitComponent({ letters }: Props): JSX.Element {
-  const puzzle: Puzzle = usePuzzleContext()
+  const { puzzle } = usePuzzleContext()
 
   const {
     onLetterHover,

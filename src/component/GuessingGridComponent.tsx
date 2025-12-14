@@ -16,7 +16,7 @@ export default function GuessingGridComponent({
   onLeftClick,
   onRightClick,
 }: Props): JSX.Element {
-  const puzzle: Puzzle = usePuzzleContext()
+  const { puzzle } = usePuzzleContext()
 
   const {
     letter: hoveredLetter,

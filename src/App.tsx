@@ -105,7 +105,7 @@ export default function App(): JSX.Element {
   }
 
   return (
-    <PuzzleContext value={history[history.length - 1]}>
+    <PuzzleContext value={{ puzzle: history[history.length - 1], undo }}>
       <HoveredContext
         value={{
           digit: hoveredDigit,

@@ -1,12 +1,16 @@
 import { createContext, useContext } from "react"
 import Puzzle from "./Puzzle"
 
-const PuzzleContext = createContext<Puzzle | undefined>(undefined)
+type ContextShape = {
+  puzzle: Puzzle
+  undo: () => void
+}
+const PuzzleContext = createContext<ContextShape | undefined>(undefined)
 
 export default PuzzleContext
 
-export function usePuzzleContext(): Puzzle {
-  const context: Puzzle | undefined = useContext(PuzzleContext)
+export function usePuzzleContext(): ContextShape {
+  const context: ContextShape | undefined = useContext(PuzzleContext)
   if (context === undefined) {
     throw new Error("useTodoContext must be within TodoProvider")
   }

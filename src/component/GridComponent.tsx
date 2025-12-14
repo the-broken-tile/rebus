@@ -5,9 +5,10 @@ import DigitComponent from "./DigitComponent"
 import SignComponent from "./SignComponent"
 import Sign from "../Sign"
 import { usePuzzleContext } from "../PuzzleContext"
+import UndoButton from "./UndoButton"
 
 export default function GridComponent(): JSX.Element {
-  const puzzle: Puzzle = usePuzzleContext()
+  const { puzzle } = usePuzzleContext()
 
   const signsPerRow = (row: number): Sign[] => {
     // @todo
@@ -22,14 +23,17 @@ export default function GridComponent(): JSX.Element {
     return []
   }
 
-  const emptyRow = (signs: Sign[]): JSX.Element => {
+  const emptyRow = (addUndo: boolean, signs: Sign[]): JSX.Element => {
     return (
       <>
         {signs.map(
           (sign: Sign, key: number): JSX.Element => (
             <Fragment key={key}>
-              <SignComponent sign={sign} />
-
+              <SignComponent sign={sign}>
+                {addUndo && key === signs.length - 1 ?
+                  <UndoButton type="portrait" />
+                : null}
+              </SignComponent>
               {key !== signs.length - 1 && <div></div>}
             </Fragment>
           ),
@@ -41,22 +45,29 @@ export default function GridComponent(): JSX.Element {
   return (
     <div className="grid">
       {puzzle.letters.map(
-        (row: Row<string>, key: number): JSX.Element => (
-          <Fragment key={key}>
+        (row: Row<string>, rowNumber: number): JSX.Element => (
+          <Fragment key={rowNumber}>
             {row.map(
-              (letters: string, key: number): JSX.Element => (
-                <Fragment key={key}>
+              (letters: string, colNumber: number): JSX.Element => (
+                <Fragment key={colNumber}>
                   <div className="number">
-                    <DigitComponent key={key} letters={letters} />
+                    <DigitComponent key={colNumber} letters={letters} />
                   </div>
-                  {key !== row.length - 1 ?
-                    <SignComponent sign={key === 0 ? "+" : "="} />
+                  {colNumber !== row.length - 1 ?
+                    <SignComponent sign={colNumber === 0 ? "+" : "="}>
+                      {rowNumber === 0 && colNumber === row.length - 2 ?
+                        <UndoButton type="landscape" />
+                      : null}
+                    </SignComponent>
                   : null}
                 </Fragment>
               ),
             )}
-            {key !== puzzle.letters.length - 1 ?
-              emptyRow(signsPerRow(key))
+            {rowNumber !== puzzle.letters.length - 1 ?
+              emptyRow(
+                rowNumber === puzzle.letters.length - 2,
+                signsPerRow(rowNumber),
+              )
             : null}
           </Fragment>
         ),

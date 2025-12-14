@@ -33,6 +33,14 @@ body {
   font-size: 2em;
 }
 
+.undo {
+  position: absolute;
+}
+.undo:after {
+  display: inline-block;
+  content: "↩️";
+}
+
 .number,
 .sign,
 .guessing-legend,
@@ -97,6 +105,15 @@ body {
   font-size: 4em;
 }
 
+@media (orientation: portrait) {
+  .undo-landscape {
+    display: none;
+  }
+  .undo {
+    right: 0.5rem;
+  }
+}
+
 @media (orientation: landscape) {
   #root {
     display: grid;
@@ -119,6 +136,12 @@ body {
     display: grid;
     grid-template-columns: 30% 1fr 30% 1fr 30%;
     grid-template-rows: 30% 1fr 30% 1fr 30%;
+  }
+  .undo-portrait {
+    display: none;
+  }
+  .undo {
+    top: 0.5rem;
   }
 }
 
