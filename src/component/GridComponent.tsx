@@ -30,7 +30,7 @@ export default function GridComponent(): JSX.Element {
             <Fragment key={key}>
               <SignComponent sign={sign} />
 
-              {key !== signs.length - 1 && <div className="bbbb"></div>}
+              {key !== signs.length - 1 && <div></div>}
             </Fragment>
           ),
         )}
