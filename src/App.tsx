@@ -41,7 +41,7 @@ export default function App(): JSX.Element {
   }, [solved])
 
   useEffect((): void => {
-    if (visible) {
+    if (visible && !history[history.length - 1].isSolved()) {
       start()
 
       return
