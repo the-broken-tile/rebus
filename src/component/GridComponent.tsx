@@ -9,27 +9,28 @@ import UndoButton from "./UndoButton"
 export default function GridComponent(): JSX.Element {
   const { puzzle } = usePuzzleContext()
 
-  const signsPerRow = (row: number): Sign[] => {
-    // @todo
-    if (row === 0) {
-      return ["+", "+", "+"]
-    }
-
-    if (row === 1) {
-      return ["=", "=", "="]
-    }
-
-    return []
+  const signsBetweenRows = (
+    numberOfColumns: number,
+    beforeLastRow: boolean,
+  ): Sign[] => {
+    return Array.from<Sign>({ length: numberOfColumns }).fill(
+      beforeLastRow ? "=" : "+",
+    )
   }
 
-  const emptyRow = (addUndo: boolean, signs: Sign[]): JSX.Element => {
+  const emptyRow = (
+    beforeLastRow: boolean,
+    numberOfColumns: number,
+  ): JSX.Element => {
+    const signs: Sign[] = signsBetweenRows(numberOfColumns, beforeLastRow)
+
     return (
       <>
         {signs.map(
           (sign: Sign, key: number): JSX.Element => (
             <Fragment key={key}>
               <SignComponent sign={sign}>
-                {addUndo && key === signs.length - 1 ?
+                {beforeLastRow && key === signs.length - 1 ?
                   <UndoButton type="portrait" />
                 : null}
               </SignComponent>
@@ -63,10 +64,7 @@ export default function GridComponent(): JSX.Element {
               ),
             )}
             {rowNumber !== puzzle.letters.length - 1 ?
-              emptyRow(
-                rowNumber === puzzle.letters.length - 2,
-                signsPerRow(rowNumber),
-              )
+              emptyRow(rowNumber === puzzle.letters.length - 2, row.length)
             : null}
           </Fragment>
         ),

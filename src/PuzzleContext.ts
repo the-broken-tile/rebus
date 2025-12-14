@@ -1,11 +1,13 @@
-import {Context, createContext, useContext} from "react"
+import { Context, createContext, useContext } from "react"
 import Puzzle from "./Puzzle"
 
 type ContextShape = {
   puzzle: Puzzle
   undo: () => void
 }
-const PuzzleContext: Context<ContextShape | undefined> = createContext<ContextShape | undefined>(undefined)
+const PuzzleContext: Context<ContextShape | undefined> = createContext<
+  ContextShape | undefined
+>(undefined)
 
 export default PuzzleContext
 
