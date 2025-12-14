@@ -1,5 +1,5 @@
 import Rand from "rand-seed"
-import {randomNumberGenerator} from "./container";
+import { randomNumberGenerator } from "./container"
 
 export default class RandomNumberGenerator {
   private rand: Rand

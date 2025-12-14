@@ -4,7 +4,11 @@ import Digit from "./Digit"
 import GuessValue from "./GuessValue"
 
 export default class GuessingGrid {
-  constructor(private readonly _guesses: Guess[]) {}
+  private readonly _guesses: Guess[]
+  constructor(guesses: Guess[]) {
+    // Dereference.
+    this._guesses = guesses.map((g: Guess): Guess => g.clone())
+  }
 
   public static create(letters: Letter[], digits: Digit[]): GuessingGrid {
     return new GuessingGrid(GuessingGrid.initGuesses(letters, digits))

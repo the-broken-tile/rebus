@@ -8,4 +8,8 @@ export class Guess {
     public digit: Digit,
     public value: GuessValue,
   ) {}
+
+  public clone(): Guess {
+    return new Guess(this.letter, this.digit, this.value)
+  }
 }

@@ -10,13 +10,14 @@ import config from "./config.json"
 import HoveredContext from "./HoveredContext"
 import PuzzleContext from "./PuzzleContext"
 import Dialog from "./component/Dialog"
+import useKeyPress from "./useKeyPress"
 
 if (config.debug) {
   randomNumberGenerator.seed = "1337"
 }
 
 export default function App(): JSX.Element {
-  const [puzzle, setPuzzle] = useState<Puzzle | null>(null)
+  const [history, setHistory] = useState<Puzzle[]>([])
   const [solved, setSolved] = useState<boolean>(false)
   const [hoveredLetter, setHoveredLetter] = useState<Letter | undefined>(
     undefined,
@@ -24,27 +25,63 @@ export default function App(): JSX.Element {
   const [hoveredDigit, setHoveredDigit] = useState<Digit | undefined>(undefined)
 
   useEffect((): void => {
-    setPuzzle(gameGenerator.generate())
+    setHistory([gameGenerator.generate()])
   }, [])
 
   useEffect((): void => {
-    if (puzzle?.isSolved()) {
+    if (history.length === 0) {
+      return
+    }
+    if (history[history.length - 1].isSolved()) {
       setSolved(true)
     }
-  }, [puzzle])
+  }, [history.length])
+
+  useKeyPress({
+    ctrl: true,
+    key: "z",
+    onKeyPressed: (): void => undo(),
+    deps: [history.length],
+  })
 
   const handleGuessClick = (letter: Letter, digit: Digit): void => {
-    if (puzzle === null) {
+    const puzzle: Puzzle | undefined = history[history.length - 1]
+    if (puzzle === undefined) {
       return
     }
 
-    if (puzzle.getGuess(letter, digit).value !== "unknown") {
-      setPuzzle(puzzle.setGuess(letter, digit, "unknown"))
+    const currentGuess: "unknown" | "yes" | "no" = puzzle.getGuess(
+      letter,
+      digit,
+    ).value
+    setHistory([
+      ...history,
+      puzzle.setGuess(
+        letter,
+        digit,
+        currentGuess === "unknown" ? "yes" : "unknown",
+      ),
+    ])
+  }
 
+  const handleRightClick = (letter: Letter, digit: Digit): void => {
+    if (history.length === 0) {
       return
     }
 
-    setPuzzle(puzzle.setGuess(letter, digit, "yes"))
+    const puzzle: Puzzle = history[history.length - 1]
+    const currentGuess: "unknown" | "yes" | "no" = puzzle.getGuess(
+      letter,
+      digit,
+    ).value
+    setHistory([
+      ...history,
+      puzzle.setGuess(
+        letter,
+        digit,
+        currentGuess === "unknown" ? "no" : "unknown",
+      ),
+    ])
   }
 
   const handleLetterHover = (letter?: Letter): void => {
@@ -55,26 +92,20 @@ export default function App(): JSX.Element {
     setHoveredDigit(digit)
   }
 
-  const handleRightClick = (letter: Letter, digit: Digit): void => {
-    if (puzzle === null) {
-      return
-    }
-
-    if (puzzle.getGuess(letter, digit).value !== "unknown") {
-      setPuzzle(puzzle.setGuess(letter, digit, "unknown"))
-
-      return
-    }
-
-    setPuzzle(puzzle.setGuess(letter, digit, "no"))
-  }
-
-  if (puzzle === null) {
+  if (history.length < 1) {
     return <>loading</>
   }
 
+  const undo = (): void => {
+    if (history.length <= 1) {
+      return
+    }
+
+    setHistory(history.slice(0, history.length - 1))
+  }
+
   return (
-    <PuzzleContext value={puzzle}>
+    <PuzzleContext value={history[history.length - 1]}>
       <HoveredContext
         value={{
           digit: hoveredDigit,
