@@ -1,5 +1,4 @@
 import { Fragment, JSX } from "react"
-import Puzzle from "../Puzzle"
 import { Row } from "../Grid"
 import DigitComponent from "./DigitComponent"
 import SignComponent from "./SignComponent"

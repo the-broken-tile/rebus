@@ -4,7 +4,6 @@ import Letter from "../Letter"
 import Digit from "../Digit"
 import GuessingGridCellComponent from "./GuessingGridCellComponent"
 import HoveredContext from "../HoveredContext"
-import Puzzle from "../Puzzle"
 import { usePuzzleContext } from "../PuzzleContext"
 
 type Props = {
