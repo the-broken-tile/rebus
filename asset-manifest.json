@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/rebus/static/css/main.aa075a6d.css",
-    "main.js": "/rebus/static/js/main.58ee6318.js",
+    "main.js": "/rebus/static/js/main.3f7ab3f8.js",
     "static/js/453.34af535a.chunk.js": "/rebus/static/js/453.34af535a.chunk.js",
     "index.html": "/rebus/index.html",
     "main.aa075a6d.css.map": "/rebus/static/css/main.aa075a6d.css.map",
-    "main.58ee6318.js.map": "/rebus/static/js/main.58ee6318.js.map",
+    "main.3f7ab3f8.js.map": "/rebus/static/js/main.3f7ab3f8.js.map",
     "453.34af535a.chunk.js.map": "/rebus/static/js/453.34af535a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.aa075a6d.css",
-    "static/js/main.58ee6318.js"
+    "static/js/main.3f7ab3f8.js"
   ]
 }
