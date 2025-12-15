@@ -49,7 +49,7 @@ export default class LettersProvider {
     for (const season of this.config.seasonal) {
       const from: Date = new Date(season.from)
       const to: Date = new Date(season.to)
-      if (to <= today || from >= today) {
+      if (to < today || from > today) {
         continue
       }
       const { pick, letters } = season
