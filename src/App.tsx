@@ -1,4 +1,5 @@
 import { JSX, useEffect, useState } from "react"
+import { puzzleProvider, cache } from "./container"
 import "./app.css"
 import Puzzle from "./models/Puzzle"
 import Letter from "./models/Letter"
@@ -14,10 +15,8 @@ import WinningDialog from "./component/WinningDialog"
 import useKeyPress from "./hooks/useKeyPress"
 import useTimer from "./hooks/useTimer"
 import useDocumentVisibility from "./hooks/useDocumentVisibility"
-import useContainer from "./hooks/useContainer"
 
 export default function App(): JSX.Element {
-  const { puzzleProvider, cache } = useContainer()
   const [history, setHistory] = useState<Puzzle[]>([])
   const [solved, setSolved] = useState<boolean>(false)
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null)
@@ -25,13 +24,15 @@ export default function App(): JSX.Element {
     undefined,
   )
   const [hoveredDigit, setHoveredDigit] = useState<Digit | undefined>(undefined)
-  const { time, start, stop } = useTimer(true)
+  const { time, start, stop } = useTimer()
   const { visible } = useDocumentVisibility()
 
+  // Initial game loading
   useEffect((): void => {
     setHistory(puzzleProvider.get())
   }, [])
 
+  // Stop the timer when the game is solved.
   useEffect((): void => {
     if (!solved) {
       return
@@ -40,16 +41,18 @@ export default function App(): JSX.Element {
     stop()
   }, [solved])
 
+  // Start and stop the timer on losing focus of the window.
   useEffect((): void => {
-    if (visible && puzzle !== null) {
-      start()
+    if (visible && !solved && puzzle !== null) {
+      start(cache.getTime(puzzle.seed))
 
       return
     }
 
     stop()
-  }, [visible])
+  }, [visible, solved])
 
+  // Check whether puzzle is solved.
   useEffect((): void => {
     if (puzzle === null) {
       return
@@ -60,16 +63,42 @@ export default function App(): JSX.Element {
     }
   }, [puzzle])
 
+  // Get the current puzzle from the history stack.
   useEffect((): void => {
     const currentState: Puzzle | undefined = history[history.length - 1]
     if (currentState) {
       setPuzzle(currentState)
     }
-  }, [history.length])
-
-  useEffect((): void => {
     cache.save(history)
   }, [history.length])
+
+  // Start the timer as soon as the puzzle is loaded.
+  useEffect((): void => {
+    if (puzzle !== null) {
+      start(cache.getTime(puzzle.seed))
+    }
+  }, [puzzle])
+
+  // Stop the timer when the puzzle is solved.
+  useEffect((): void => {
+    if (solved) {
+      stop()
+    }
+  }, [solved])
+
+  useEffect((): (() => void) => {
+    if (puzzle !== null) {
+      cache.setTime(puzzle.seed, time)
+    }
+
+    return (): void => {
+      if (puzzle === null) {
+        return
+      }
+
+      cache.setTime(puzzle.seed, time)
+    }
+  }, [puzzle, time])
 
   useKeyPress({
     ctrl: true,

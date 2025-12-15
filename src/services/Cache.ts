@@ -1,12 +1,16 @@
 import Guess from "../models/Guess"
-import Puzzle from "../models/Puzzle"
+import Puzzle, { SerializedPuzzle } from "../models/Puzzle"
+
+type KeyType = "guesses" | "time"
 
 export default class Cache {
   constructor(private readonly prefix: string) {}
 
   public getHistory(seed: string): Guess[][] | null {
-    const guesses: string | null = localStorage.getItem(this.key(seed))
-    if (guesses === null) {
+    const serialized: string | null = localStorage.getItem(
+      this.key(seed, "guesses"),
+    )
+    if (serialized === null) {
       this.purgeHistory(seed)
 
       return null
@@ -14,11 +18,13 @@ export default class Cache {
 
     this.purgeHistory(seed)
 
-    return JSON.parse(guesses).map((record: Record<string, any>[]): Guess[] => {
-      return record.map(
-        (row: Record<string, any>): Guess => Guess.fromJSON(row),
-      )
-    })
+    return JSON.parse(serialized).map(
+      (serialized: SerializedPuzzle): Guess[] => {
+        return serialized.guesses.map(
+          (row: Record<string, any>): Guess => Guess.fromJSON(row),
+        )
+      },
+    )
   }
 
   public save(history: Puzzle[]): void {
@@ -28,19 +34,30 @@ export default class Cache {
     const [puzzle] = history
     const { seed } = puzzle
     // debugger
-    localStorage.setItem(
-      this.key(seed),
-      JSON.stringify(history.map((puzzle: Puzzle): Guess[] => puzzle.guesses)),
-    )
+    localStorage.setItem(this.key(seed, "guesses"), JSON.stringify(history))
   }
 
+  public getTime(seed: string): number {
+    const cached: string | null = localStorage.getItem(this.key(seed, "time"))
+
+    if (cached === null) {
+      return 0
+    }
+
+    return Number(cached)
+  }
+
+  public setTime(seed: string, time: number): void {
+    localStorage.setItem(this.key(seed, "time"), String(time))
+  }
   /**
    * Deletes old records
    */
   private purgeHistory(seed: string): void {
     for (let i: number = 0, l: number = localStorage.length; i < l; i++) {
       const k: string | null = localStorage.key(i)
-      if (k === null || k === this.key(seed)) {
+      if (k === null || k.startsWith(`${this.prefix}/${seed}`)) {
+        // skip anything that's the current seed or not prefixed with this app's prefix.
         continue
       }
 
@@ -48,7 +65,7 @@ export default class Cache {
     }
   }
 
-  private key(seed: string): string {
-    return `${this.prefix}/${seed}/guesses`
+  private key(seed: string, type: KeyType): string {
+    return `${this.prefix}/${seed}/${type}`
   }
 }

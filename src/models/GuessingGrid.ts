@@ -100,4 +100,10 @@ export default class GuessingGrid {
 
     return guess.letter
   }
+
+  public toJSON(): Record<string, any> {
+    return {
+      guesses: this._guesses,
+    }
+  }
 }

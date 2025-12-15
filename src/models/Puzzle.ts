@@ -2,8 +2,12 @@ import Letter from "./Letter"
 import Grid, { Row } from "../Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
-import Guess from "./Guess"
+import Guess, { SerializedGuess } from "./Guess"
 import GuessValue from "./GuessValue"
+
+export type SerializedPuzzle = {
+  guesses: SerializedGuess[]
+}
 
 export default class Puzzle {
   constructor(
@@ -79,5 +83,11 @@ export default class Puzzle {
       (guess: Guess): boolean =>
         this.lettersToNumbers[guess.letter] === guess.digit,
     )
+  }
+
+  public toJSON(): SerializedPuzzle {
+    return {
+      guesses: this.guesses,
+    }
   }
 }

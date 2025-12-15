@@ -2,6 +2,12 @@ import Letter from "./Letter"
 import Digit from "./Digit"
 import GuessValue from "./GuessValue"
 
+export type SerializedGuess = {
+  letter: string
+  digit: number
+  value: GuessValue
+}
+
 export default class Guess {
   constructor(
     public letter: Letter,

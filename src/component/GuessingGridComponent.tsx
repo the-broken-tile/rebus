@@ -1,10 +1,10 @@
 import { Fragment, JSX, useContext } from "react"
+import { symbolsProvider } from "../container"
 import Letter from "../models/Letter"
 import Digit from "../models/Digit"
 import GuessingGridCellComponent from "./GuessingGridCellComponent"
 import HoveredContext from "../HoveredContext"
 import { usePuzzleContext } from "../PuzzleContext"
-import useContainer from "../hooks/useContainer"
 
 type Props = {
   onLeftClick: (letter: Letter, digit: Digit) => void
@@ -16,7 +16,6 @@ export default function GuessingGridComponent({
   onRightClick,
 }: Props): JSX.Element {
   const { puzzle } = usePuzzleContext()
-  const { symbolsProvider } = useContainer()
   const {
     letter: hoveredLetter,
     digit: hoveredDigit,
