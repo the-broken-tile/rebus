@@ -4,6 +4,7 @@ import "./app.css"
 import Puzzle from "./models/Puzzle"
 import Letter from "./models/Letter"
 import Digit from "./models/Digit"
+import config from "./config.json"
 
 import HoveredContext from "./HoveredContext"
 import PuzzleContext from "./PuzzleContext"
@@ -15,6 +16,9 @@ import WinningDialog from "./component/WinningDialog"
 import useKeyPress from "./hooks/useKeyPress"
 import useTimer from "./hooks/useTimer"
 import useDocumentVisibility from "./hooks/useDocumentVisibility"
+import formatDuration from "./util/formatTime"
+
+const { debug } = config
 
 export default function App(): JSX.Element {
   const [history, setHistory] = useState<Puzzle[]>([])
@@ -175,6 +179,7 @@ export default function App(): JSX.Element {
           onLetterHover: handleLetterHover,
         }}
       >
+        {debug && <div style={{ position: "absolute" }}>{formatDuration(time)}</div>}
         <WinningDialog time={time} />
         <GuessingGridComponent
           onLeftClick={handleGuessClick}
