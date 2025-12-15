@@ -4,6 +4,7 @@ import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"
 import GuessValue from "./GuessValue"
+import Matrix from "./Matrix"
 
 export type SerializedPuzzle = {
   guesses: SerializedGuess[]
@@ -15,6 +16,7 @@ export default class Puzzle {
     public readonly lettersToNumbers: Record<Letter, Digit>,
     private grid: Grid<number, 3>,
     public readonly guessingGrid: GuessingGrid,
+    private readonly matrix: Matrix,
   ) {}
 
   get digitsToLetters(): Record<Digit, Letter> {
@@ -50,6 +52,7 @@ export default class Puzzle {
       this.lettersToNumbers,
       this.grid,
       new GuessingGrid(guesses),
+      this.matrix,
     )
   }
 
@@ -63,6 +66,7 @@ export default class Puzzle {
       this.lettersToNumbers,
       this.grid,
       this.guessingGrid.setGuess(letter, digit, guess),
+      this.matrix,
     )
   }
 

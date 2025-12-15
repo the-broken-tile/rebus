@@ -7,6 +7,8 @@ import config from "../config.json"
 import GuessingGrid from "../models/GuessingGrid"
 import { Grid, Tuple } from "../Grid"
 import Matrix from "../models/Matrix"
+import MatrixBuilder from "./MatrixBuilder"
+import transpose from "../util/transpose"
 
 const LARGEST_NUMBER = 999
 const SMALLEST_NUMBER = 100
@@ -17,6 +19,7 @@ export default class GameGenerator {
   constructor(
     private readonly randomNumberGenerator: RandomNumberGenerator,
     private readonly symbolsProvider: LettersProvider,
+    private readonly matrixBuilder: MatrixBuilder,
   ) {}
   public generate(): Puzzle {
     if (this.cache[this.randomNumberGenerator.seed] !== undefined) {
@@ -35,14 +38,18 @@ export default class GameGenerator {
       ],
     ]
 
+    const lettersToNumbers: Record<Letter, Digit> = this.lettersToNumbersMap()
+    const matrix: Matrix = this.matrixBuilder.build(grid, lettersToNumbers)
+
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
       this.randomNumberGenerator.seed,
-      this.lettersToNumbersMap(),
+      lettersToNumbers,
       grid,
       GuessingGrid.create(
         this.symbolsProvider.letters,
         this.symbolsProvider.digits,
       ),
+      matrix,
     )
 
     return this.cache[this.randomNumberGenerator.seed]
@@ -120,7 +127,7 @@ export default class GameGenerator {
   }
 
   private isValid(attempt: Grid<number, 2>): boolean {
-    const transposed: Grid<number, 2> = this.transpose(attempt)
+    const transposed: Grid<number, 2> = transpose<number, 2>(attempt)
 
     return (
       this.validateAllDigitsArePresent(attempt) &&
@@ -157,24 +164,6 @@ export default class GameGenerator {
     })
 
     return presetNumbers.size === this.symbolsProvider.digits.length
-  }
-
-  private transpose(matrix: Grid<number, 2>): Grid<number, 2> {
-    const rows: number = matrix.length
-    const cols: number = matrix[0].length
-
-    const result: Grid<number, 2> = Array.from(
-      { length: cols },
-      (): Tuple<number, 2> => Array(rows) as Tuple<number, 2>,
-    ) as Grid<number, 2>
-
-    for (let r: number = 0; r < rows; r++) {
-      for (let c: number = 0; c < cols; c++) {
-        result[c][r] = matrix[r][c]
-      }
-    }
-
-    return result
   }
 
   private sum(row: number[]): number {
