@@ -35,7 +35,10 @@ export default class LettersProvider {
       this.config.letters,
     )
 
-    this.cache[seed] = [...seasonal, ...shuffled.slice(0, this.digits.length - seasonal.length)]
+    this.cache[seed] = [
+      ...seasonal,
+      ...shuffled.slice(0, this.digits.length - seasonal.length),
+    ]
 
     return this.cache[seed]
   }
@@ -54,7 +57,9 @@ export default class LettersProvider {
       }
       const { pick, letters } = season
 
-      return this.randomNumberGenerator.shuffle<Letter>(letters).slice(0, pick) as Letter[]
+      return this.randomNumberGenerator
+        .shuffle<Letter>(letters)
+        .slice(0, pick) as Letter[]
     }
 
     return []
