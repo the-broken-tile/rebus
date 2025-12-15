@@ -179,7 +179,9 @@ export default function App(): JSX.Element {
           onLetterHover: handleLetterHover,
         }}
       >
-        {debug && <div style={{ position: "absolute" }}>{formatDuration(time)}</div>}
+        {debug && (
+          <div style={{ position: "absolute" }}>{formatDuration(time)}</div>
+        )}
         <WinningDialog time={time} />
         <GuessingGridComponent
           onLeftClick={handleGuessClick}
