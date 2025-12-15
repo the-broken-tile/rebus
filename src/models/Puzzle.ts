@@ -1,5 +1,5 @@
 import Letter from "./Letter"
-import Grid, { Row } from "../Grid"
+import { Grid, Tuple } from "../Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"
@@ -13,7 +13,7 @@ export default class Puzzle {
   constructor(
     public readonly seed: string,
     public readonly lettersToNumbers: Record<Letter, Digit>,
-    private grid: Grid<number>,
+    private grid: Grid<number, 3>,
     public readonly guessingGrid: GuessingGrid,
   ) {}
 
@@ -26,8 +26,8 @@ export default class Puzzle {
     return result as Record<Digit, Letter>
   }
 
-  get letters(): Grid<string> {
-    return this.grid.map((row: Row<number>): Row<string> => {
+  get letters(): Grid<string, 3> {
+    return this.grid.map((row: Tuple<number, 3>): Tuple<string, 3> => {
       return row.map((n: number): string => {
         return String(n)
           .split("")
@@ -36,8 +36,8 @@ export default class Puzzle {
               this.digitsToLetters[Number(number) as Digit],
           )
           .join("")
-      }) as Row<string>
-    }) as Grid<string>
+      }) as Tuple<string, 3>
+    }) as Grid<string, 3>
   }
 
   get guesses(): Guess[] {

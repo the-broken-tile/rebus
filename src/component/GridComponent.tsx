@@ -1,5 +1,5 @@
 import { Fragment, JSX } from "react"
-import { Row } from "../Grid"
+import { Tuple } from "../Grid"
 import DigitComponent from "./DigitComponent"
 import SignComponent from "./SignComponent"
 import Sign from "../models/Sign"
@@ -45,7 +45,7 @@ export default function GridComponent(): JSX.Element {
   return (
     <div className="grid">
       {puzzle.letters.map(
-        (row: Row<string>, rowNumber: number): JSX.Element => (
+        (row: Tuple<string, 3>, rowNumber: number): JSX.Element => (
           <Fragment key={rowNumber}>
             {row.map(
               (letters: string, colNumber: number): JSX.Element => (

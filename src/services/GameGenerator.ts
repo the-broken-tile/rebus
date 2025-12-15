@@ -5,38 +5,40 @@ import Digit from "../models/Digit"
 import LettersProvider from "./LettersProvider"
 import config from "../config.json"
 import GuessingGrid from "../models/GuessingGrid"
+import { Grid, Tuple } from "../Grid"
+import Matrix from "../models/Matrix"
 
 const LARGEST_NUMBER = 999
 const SMALLEST_NUMBER = 100
-type Row = [number, number]
-type Grid = [Row, Row]
 
 export default class GameGenerator {
   private cache: Record<string, Puzzle> = {}
 
   constructor(
-    private randomNumberGenerator: RandomNumberGenerator,
-    private symbolsProvider: LettersProvider,
+    private readonly randomNumberGenerator: RandomNumberGenerator,
+    private readonly symbolsProvider: LettersProvider,
   ) {}
   public generate(): Puzzle {
     if (this.cache[this.randomNumberGenerator.seed] !== undefined) {
       return this.cache[this.randomNumberGenerator.seed]
     }
 
-    const numbers: Grid = this.generateNumber()
+    const numbers: Grid<number, 2> = this.generateNumber()
+
+    const grid: Grid<number, 3> = [
+      [numbers[0][0], numbers[0][1], this.sum(numbers[0])],
+      [numbers[1][0], numbers[1][1], numbers[1][0] + numbers[1][1]],
+      [
+        numbers[0][0] + numbers[1][0],
+        numbers[0][1] + numbers[1][1],
+        this.sum(numbers[0]) + this.sum(numbers[1]),
+      ],
+    ]
 
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
       this.randomNumberGenerator.seed,
       this.lettersToNumbersMap(),
-      [
-        [numbers[0][0], numbers[0][1], this.sum(numbers[0])],
-        [numbers[1][0], numbers[1][1], numbers[1][0] + numbers[1][1]],
-        [
-          numbers[0][0] + numbers[1][0],
-          numbers[0][1] + numbers[1][1],
-          this.sum(numbers[0]) + this.sum(numbers[1]),
-        ],
-      ],
+      grid,
       GuessingGrid.create(
         this.symbolsProvider.letters,
         this.symbolsProvider.digits,
@@ -46,8 +48,8 @@ export default class GameGenerator {
     return this.cache[this.randomNumberGenerator.seed]
   }
 
-  private generateNumber(): Grid {
-    let attempt: Grid = this.createAttempt()
+  private generateNumber(): Grid<number, 2> {
+    let attempt: Grid<number, 2> = this.createAttempt()
     let attemptsCount: number = 1
 
     while (!this.isValid(attempt)) {
@@ -58,7 +60,7 @@ export default class GameGenerator {
     if (config.debug) {
       let largestNumber: number = 0
       let sum: number = 0
-      attempt.forEach((row: Row): void => {
+      attempt.forEach((row: Tuple<number, 2>): void => {
         row.forEach((n: number): void => {
           largestNumber = Math.max(largestNumber, n)
           sum += n
@@ -71,7 +73,7 @@ export default class GameGenerator {
     return attempt
   }
 
-  private createAttempt(): Grid {
+  private createAttempt(): Grid<number, 2> {
     const largetPossibleHere: number = LARGEST_NUMBER - 3 * SMALLEST_NUMBER
 
     return [
@@ -117,19 +119,21 @@ export default class GameGenerator {
     )
   }
 
-  private isValid(attempt: Grid): boolean {
-    const transposed: Grid = this.transpose(attempt)
+  private isValid(attempt: Grid<number, 2>): boolean {
+    const transposed: Grid<number, 2> = this.transpose(attempt)
 
     return (
       this.validateAllDigitsArePresent(attempt) &&
-      attempt.every((r: Row): boolean => this.isRowInRange(r)) &&
-      transposed.every((r: Row): boolean => this.isRowInRange(r)) &&
+      attempt.every((r: Tuple<number, 2>): boolean => this.isRowInRange(r)) &&
+      transposed.every((r: Tuple<number, 2>): boolean =>
+        this.isRowInRange(r),
+      ) &&
       // Sum the whole for  the last number
       this.isInRange(this.sum([...attempt[0], ...attempt[1]]))
     )
   }
 
-  private isRowInRange(r: Row): boolean {
+  private isRowInRange(r: Tuple<number, 2>): boolean {
     return (
       r.every((n: number): boolean => this.isInRange(n)) &&
       this.isInRange(this.sum(r))
@@ -139,10 +143,10 @@ export default class GameGenerator {
     return n >= SMALLEST_NUMBER && n <= LARGEST_NUMBER
   }
 
-  private validateAllDigitsArePresent(attempt: Grid): boolean {
+  private validateAllDigitsArePresent(attempt: Grid<number, 2>): boolean {
     const presetNumbers = new Set<number>()
 
-    attempt.forEach((row: Row): void => {
+    attempt.forEach((row: Tuple<number, 2>): void => {
       row.forEach((n: number): void => {
         String(n)
           .split("")
@@ -155,14 +159,14 @@ export default class GameGenerator {
     return presetNumbers.size === this.symbolsProvider.digits.length
   }
 
-  private transpose(matrix: Grid): Grid {
+  private transpose(matrix: Grid<number, 2>): Grid<number, 2> {
     const rows: number = matrix.length
     const cols: number = matrix[0].length
 
-    const result: Grid = Array.from(
+    const result: Grid<number, 2> = Array.from(
       { length: cols },
-      (): Row => Array(rows) as Row,
-    ) as Grid
+      (): Tuple<number, 2> => Array(rows) as Tuple<number, 2>,
+    ) as Grid<number, 2>
 
     for (let r: number = 0; r < rows; r++) {
       for (let c: number = 0; c < cols; c++) {

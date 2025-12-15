@@ -1,5 +1,4 @@
-export type Row<T> = [T, T, T]
+export type Tuple<T, N extends number, R extends T[] = []> =
+  R["length"] extends N ? R : Tuple<T, N, [...R, T]>
 
-type Grid<T> = [Row<T>, Row<T>, Row<T>]
-
-export default Grid
+export type Grid<T, N extends number> = Tuple<Tuple<T, N>, N>
