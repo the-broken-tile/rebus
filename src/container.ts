@@ -12,7 +12,7 @@ const randomNumberGenerator: RandomNumberGenerator = new RandomNumberGenerator(
 const symbolsProvider = new SymbolsProvider(randomNumberGenerator)
 const gameGenerator = new GameGenerator(randomNumberGenerator, symbolsProvider)
 
-const cache = new Cache("rebus")
+const cache = new Cache("rebus.v0.1")
 const puzzleProvider = new PuzzleProvider(gameGenerator, cache)
 
 export { symbolsProvider, puzzleProvider, cache }
