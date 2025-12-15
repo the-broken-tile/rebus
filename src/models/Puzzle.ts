@@ -3,7 +3,6 @@ import { Grid, Tuple } from "../Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"
-import GuessValue from "./GuessValue"
 import Matrix from "./Matrix"
 
 export type SerializedPuzzle = {
@@ -51,16 +50,20 @@ export default class Puzzle {
       this.seed,
       this.lettersToNumbers,
       this.grid,
-      new GuessingGrid(guesses),
+      new GuessingGrid(guesses, this.lettersToNumbers),
       this.matrix,
     )
   }
 
-  public getGuess(letter: Letter, digit: Digit): Guess {
-    return this.guessingGrid.getGuess(letter, digit)
+  public getGuess(letter: Letter, digit: Digit): boolean | undefined {
+    return this.guessingGrid.getGuess(letter, digit)?.value
   }
 
-  public setGuess(letter: Letter, digit: Digit, guess: GuessValue): Puzzle {
+  public setGuess(
+    letter: Letter,
+    digit: Digit,
+    guess: boolean | undefined,
+  ): Puzzle {
     return new Puzzle(
       this.seed,
       this.lettersToNumbers,
@@ -76,7 +79,7 @@ export default class Puzzle {
 
   public isSolved(): boolean {
     const yesGuesses: Guess[] = this.guesses.filter(
-      (guess: Guess): boolean => guess.value === "yes",
+      (g: Guess): boolean => g.value,
     )
 
     if (yesGuesses.length !== Object.keys(this.lettersToNumbers).length) {

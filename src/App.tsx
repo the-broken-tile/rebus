@@ -116,16 +116,14 @@ export default function App(): JSX.Element {
       return
     }
 
-    const currentGuess: "unknown" | "yes" | "no" = puzzle.getGuess(
-      letter,
-      digit,
-    ).value
+    const currentGuess: boolean | undefined = puzzle.getGuess(letter, digit)
+
     setHistory([
       ...history,
       puzzle.setGuess(
         letter,
         digit,
-        currentGuess === "unknown" ? "yes" : "unknown",
+        currentGuess === undefined ? true : undefined,
       ),
     ])
   }
@@ -135,16 +133,14 @@ export default function App(): JSX.Element {
       return
     }
 
-    const currentGuess: "unknown" | "yes" | "no" = puzzle.getGuess(
-      letter,
-      digit,
-    ).value
+    const currentGuess: boolean | undefined = puzzle.getGuess(letter, digit)
+
     setHistory([
       ...history,
       puzzle.setGuess(
         letter,
         digit,
-        currentGuess === "unknown" ? "no" : "unknown",
+        currentGuess === undefined ? false : undefined,
       ),
     ])
   }

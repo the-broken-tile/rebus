@@ -1,18 +1,17 @@
 import Letter from "./Letter"
 import Digit from "./Digit"
-import GuessValue from "./GuessValue"
 
 export type SerializedGuess = {
   letter: string
   digit: number
-  value: GuessValue
+  value: boolean
 }
 
 export default class Guess {
   constructor(
     public letter: Letter,
     public digit: Digit,
-    public value: GuessValue,
+    public value: boolean,
   ) {}
 
   public clone(): Guess {
@@ -31,7 +30,7 @@ export default class Guess {
     return new Guess(
       payload.letter as Letter,
       payload.digit as Digit,
-      payload.value as GuessValue,
+      payload.value,
     )
   }
 }

@@ -45,10 +45,7 @@ export default class GameGenerator {
       this.randomNumberGenerator.seed,
       lettersToNumbers,
       grid,
-      GuessingGrid.create(
-        this.symbolsProvider.letters,
-        this.symbolsProvider.digits,
-      ),
+      GuessingGrid.create(lettersToNumbers),
       matrix,
     )
 

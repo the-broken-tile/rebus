@@ -18,7 +18,7 @@ const gameGenerator = new GameGenerator(
   linkedTreeBuilder,
 )
 
-const cache = new Cache("rebus.v0.1")
+const cache = new Cache(config.cachePrefix)
 const puzzleProvider = new PuzzleProvider(gameGenerator, cache)
 
 export { symbolsProvider, puzzleProvider, cache }
