@@ -16,6 +16,7 @@ export default class Puzzle {
     private grid: Grid<number, 3>,
     public readonly guessingGrid: GuessingGrid,
     private readonly matrix: Matrix,
+    public readonly base: number = 10,
   ) {}
 
   get digitsToLetters(): Record<Digit, Letter> {
@@ -27,7 +28,15 @@ export default class Puzzle {
     return result as Record<Digit, Letter>
   }
 
-  get letters(): Grid<string, 3> {
+  get digits(): Digit[] {
+    return Object.values(this.lettersToNumbers)
+  }
+
+  get letters(): Letter[] {
+    return Object.keys(this.lettersToNumbers) as Letter[]
+  }
+
+  get letterGrid(): Grid<string, 3> {
     return this.grid.map((row: Tuple<number, 3>): Tuple<string, 3> => {
       return row.map((n: number): string => {
         return String(n)
@@ -94,7 +103,7 @@ export default class Puzzle {
 
   public toJSON(): SerializedPuzzle {
     return {
-      guesses: this.guesses,
+      guesses: this.guesses.map((g: Guess): SerializedGuess => g.toJSON()),
     }
   }
 }

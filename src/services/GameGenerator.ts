@@ -9,6 +9,7 @@ import { Grid, Tuple } from "../Grid"
 import Matrix from "../models/Matrix"
 import MatrixBuilder from "./MatrixBuilder"
 import transpose from "../util/transpose"
+import isValidBase from "../util/isValidBase"
 
 const LARGEST_NUMBER = 999
 const SMALLEST_NUMBER = 100
@@ -21,12 +22,16 @@ export default class GameGenerator {
     private readonly symbolsProvider: LettersProvider,
     private readonly matrixBuilder: MatrixBuilder,
   ) {}
-  public generate(): Puzzle {
+  public generate(base: number): Puzzle {
+    if (!isValidBase(base)) {
+      throw new Error(`Invalid base number: ${base}`)
+    }
+
     if (this.cache[this.randomNumberGenerator.seed] !== undefined) {
       return this.cache[this.randomNumberGenerator.seed]
     }
 
-    const numbers: Grid<number, 2> = this.generateNumber()
+    const numbers: Grid<number, 2> = this.generateNumber(base)
 
     const grid: Grid<number, 3> = [
       [numbers[0][0], numbers[0][1], this.sum(numbers[0])],
@@ -38,7 +43,8 @@ export default class GameGenerator {
       ],
     ]
 
-    const lettersToNumbers: Record<Letter, Digit> = this.lettersToNumbersMap()
+    const lettersToNumbers: Record<Letter, Digit> =
+      this.lettersToNumbersMap(base)
     const matrix: Matrix = this.matrixBuilder.build(grid, lettersToNumbers)
 
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
@@ -52,12 +58,12 @@ export default class GameGenerator {
     return this.cache[this.randomNumberGenerator.seed]
   }
 
-  private generateNumber(): Grid<number, 2> {
-    let attempt: Grid<number, 2> = this.createAttempt()
+  private generateNumber(base: number): Grid<number, 2> {
+    let attempt: Grid<number, 2> = this.createAttempt(base)
     let attemptsCount: number = 1
 
-    while (!this.isValid(attempt)) {
-      attempt = this.createAttempt()
+    while (!this.isValid(attempt, base)) {
+      attempt = this.createAttempt(base)
       attemptsCount += 1
     }
 
@@ -77,7 +83,7 @@ export default class GameGenerator {
     return attempt
   }
 
-  private createAttempt(): Grid<number, 2> {
+  private createAttempt(base: number): Grid<number, 2> {
     const largetPossibleHere: number = LARGEST_NUMBER - 3 * SMALLEST_NUMBER
 
     return [
@@ -103,12 +109,12 @@ export default class GameGenerator {
       ],
     ]
   }
-  private lettersToNumbersMap(): Record<Letter, Digit> {
+  private lettersToNumbersMap(base: number): Record<Letter, Digit> {
     const result: Letter[] = this.randomNumberGenerator.shuffle<Letter>(
-      this.symbolsProvider.letters,
+      this.symbolsProvider.getLetters(base),
     )
     const numbers: Digit[] = this.randomNumberGenerator.shuffle<Digit>(
-      this.symbolsProvider.digits,
+      this.symbolsProvider.getDigits(base),
     )
 
     return result.reduce<Record<Letter, Digit>>(
@@ -123,11 +129,11 @@ export default class GameGenerator {
     )
   }
 
-  private isValid(attempt: Grid<number, 2>): boolean {
+  private isValid(attempt: Grid<number, 2>, base: number): boolean {
     const transposed: Grid<number, 2> = transpose<number, 2>(attempt)
 
     return (
-      this.validateAllDigitsArePresent(attempt) &&
+      this.validateAllDigitsArePresent(attempt, base) &&
       attempt.every((r: Tuple<number, 2>): boolean => this.isRowInRange(r)) &&
       transposed.every((r: Tuple<number, 2>): boolean =>
         this.isRowInRange(r),
@@ -147,7 +153,10 @@ export default class GameGenerator {
     return n >= SMALLEST_NUMBER && n <= LARGEST_NUMBER
   }
 
-  private validateAllDigitsArePresent(attempt: Grid<number, 2>): boolean {
+  private validateAllDigitsArePresent(
+    attempt: Grid<number, 2>,
+    base: number,
+  ): boolean {
     const presetNumbers = new Set<number>()
 
     attempt.forEach((row: Tuple<number, 2>): void => {
@@ -160,7 +169,7 @@ export default class GameGenerator {
       })
     })
 
-    return presetNumbers.size === this.symbolsProvider.digits.length
+    return presetNumbers.size === base
   }
 
   private sum(row: number[]): number {

@@ -1,5 +1,4 @@
 import { Fragment, JSX, useContext } from "react"
-import { symbolsProvider } from "../container"
 import Letter from "../models/Letter"
 import Digit from "../models/Digit"
 import GuessingGridCellComponent from "./GuessingGridCellComponent"
@@ -43,7 +42,7 @@ export default function GuessingGridComponent({
 
   return (
     <div className="guessing" onMouseLeave={resetHovers}>
-      {symbolsProvider.letters.map(
+      {puzzle.letters.map(
         (letter: Letter): JSX.Element => (
           <Fragment key={letter}>
             <div
@@ -55,7 +54,7 @@ export default function GuessingGridComponent({
             >
               {letter}
             </div>
-            {symbolsProvider.digits.map(
+            {puzzle.digits.map(
               (digit: Digit, key: number): JSX.Element => (
                 <GuessingGridCellComponent
                   className={

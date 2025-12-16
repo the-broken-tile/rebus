@@ -3,7 +3,7 @@ import Digit from "./Digit"
 
 export type SerializedGuess = {
   letter: string
-  digit: number
+  digit: number | string
   value: boolean
 }
 
@@ -18,7 +18,7 @@ export default class Guess {
     return new Guess(this.letter, this.digit, this.value)
   }
 
-  public toJSON(): Record<string, any> {
+  public toJSON(): SerializedGuess {
     return {
       letter: this.letter,
       digit: this.digit,

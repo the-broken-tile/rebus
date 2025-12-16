@@ -20,7 +20,7 @@ export default function DigitComponent({ letters }: Props): JSX.Element {
   } = useContext(HoveredContext)
 
   const handleHover = (letter: Letter): void => {
-    const digit: Digit | undefined = puzzle.getLetterGuess(letter as Letter)
+    const digit: Digit | undefined = puzzle.getLetterGuess(letter)
     if (digit !== undefined) {
       onDigitHover(digit)
     }
@@ -29,7 +29,7 @@ export default function DigitComponent({ letters }: Props): JSX.Element {
   }
 
   const renderLetter = (letter: Letter): string | Digit => {
-    const digit: Digit | undefined = puzzle.getLetterGuess(letter as Letter)
+    const digit: Digit | undefined = puzzle.getLetterGuess(letter)
 
     return digit ?? letter
   }

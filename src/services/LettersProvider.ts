@@ -24,7 +24,7 @@ export default class LettersProvider {
     this.config = config as Config
   }
 
-  get letters(): Letter[] {
+  public getLetters(base: number): Letter[] {
     const seed: string = this.randomNumberGenerator.seed
     if (this.cache[seed]) {
       return this.cache[seed]
@@ -37,13 +37,13 @@ export default class LettersProvider {
 
     this.cache[seed] = [
       ...seasonal,
-      ...shuffled.slice(0, this.digits.length - seasonal.length),
-    ]
+      ...shuffled.slice(0, base), // cut them twice in case seasonal are more than the base
+    ].slice(0, base)
 
     return this.cache[seed]
   }
 
-  get digits(): Digit[] {
+  public getDigits(base: number): Digit[] {
     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   }
 

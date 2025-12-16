@@ -44,7 +44,7 @@ export default function GridComponent(): JSX.Element {
 
   return (
     <div className="grid">
-      {puzzle.letters.map(
+      {puzzle.letterGrid.map(
         (row: Tuple<string, 3>, rowNumber: number): JSX.Element => (
           <Fragment key={rowNumber}>
             {row.map(
@@ -63,8 +63,8 @@ export default function GridComponent(): JSX.Element {
                 </Fragment>
               ),
             )}
-            {rowNumber !== puzzle.letters.length - 1 ?
-              emptyRow(rowNumber === puzzle.letters.length - 2, row.length)
+            {rowNumber !== puzzle.letterGrid.length - 1 ?
+              emptyRow(rowNumber === puzzle.letterGrid.length - 2, row.length)
             : null}
           </Fragment>
         ),
