@@ -30,7 +30,7 @@ export default function GuessingGridComponent({
     onRightClick(letter, digit)
   }
 
-  const handleHover = (letter: Letter, digit: Digit): void => {
+  const handleHover = (letter: Letter, digit?: Digit): void => {
     onLetterHover(letter)
     onDigitHover(digit)
   }
@@ -46,6 +46,7 @@ export default function GuessingGridComponent({
         (letter: Letter): JSX.Element => (
           <Fragment key={letter}>
             <div
+              onMouseOver={() => handleHover(letter, hoveredDigit)}
               className={
                 letter === hoveredLetter ?
                   "guessing-legend highlighted"

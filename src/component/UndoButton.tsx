@@ -9,6 +9,8 @@ export default function UndoButton({ type }: Props): JSX.Element {
   const { undo } = usePuzzleContext()
 
   return (
-    <span role="button" className={`undo undo-${type}`} onClick={undo}></span>
+    <span role="button" className={`undo undo-${type}`} onClick={undo}>
+      ↩️
+    </span>
   )
 }

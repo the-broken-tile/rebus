@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from "react"
+import { JSX, useEffect, useState, useRef, RefObject } from "react"
 import { puzzleProvider, cache } from "./container"
 import "./app.css"
 import Puzzle from "./models/Puzzle"
@@ -17,6 +17,8 @@ import useKeyPress from "./hooks/useKeyPress"
 import useTimer from "./hooks/useTimer"
 import useDocumentVisibility from "./hooks/useDocumentVisibility"
 import formatDuration from "./util/formatTime"
+import InfoButton from "./component/InfoButton"
+import AppRefContext from "./AppRefContext"
 
 const { debug } = config
 
@@ -31,6 +33,7 @@ export default function App(): JSX.Element {
   const { time, start, stop } = useTimer()
   const { visible } = useDocumentVisibility()
   const [hash] = useState((): string => window.location.hash)
+  const appRef: RefObject<HTMLDivElement | null> = useRef(null)
 
   // Initial game loading
   useEffect((): void => {
@@ -176,16 +179,19 @@ export default function App(): JSX.Element {
           onLetterHover: handleLetterHover,
         }}
       >
-        <div id="app" className={`base-${puzzle.base}`}>
-          {debug && (
-            <div style={{ position: "absolute" }}>{formatDuration(time)}</div>
-          )}
-          <WinningDialog time={time} />
-          <GuessingGridComponent
-            onLeftClick={handleGuessClick}
-            onRightClick={handleRightClick}
-          />
-          <GridComponent />
+        <div id="app" className={`base-${puzzle.base}`} ref={appRef}>
+          <AppRefContext value={appRef as RefObject<HTMLDivElement>}>
+            {debug && (
+              <div style={{ position: "absolute" }}>{formatDuration(time)}</div>
+            )}
+            <WinningDialog time={time} />
+            <GuessingGridComponent
+              onLeftClick={handleGuessClick}
+              onRightClick={handleRightClick}
+            />
+            <GridComponent />
+            <InfoButton />
+          </AppRefContext>
         </div>
       </HoveredContext>
     </PuzzleContext>
