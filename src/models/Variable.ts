@@ -6,11 +6,4 @@ export default class Variable {
     public readonly digits: Digit[],
     public readonly letters: Letter[],
   ) {}
-
-  public valueOf(): number {
-    return this.digits.reduce(
-      (carry: number, digit: number): number => carry + digit,
-      0,
-    )
-  }
 }

@@ -6,14 +6,14 @@ export default class GuessingGrid {
   private readonly _guesses: Guess[]
   constructor(
     guesses: Guess[],
-    private readonly lettersToNumbers: Record<Letter, Digit>,
+    private readonly lettersToDigits: Record<Letter, Digit>,
   ) {
     // Dereference.
     this._guesses = guesses.map((g: Guess): Guess => g.clone())
   }
 
-  public static create(lettersToNumbers: Record<Letter, Digit>): GuessingGrid {
-    return new GuessingGrid([], lettersToNumbers)
+  public static create(lettersToDigits: Record<Letter, Digit>): GuessingGrid {
+    return new GuessingGrid([], lettersToDigits)
   }
 
   get guesses(): Guess[] {
@@ -50,7 +50,7 @@ export default class GuessingGrid {
       guesses.push(new Guess(letter, digit, guess))
     }
 
-    return new GuessingGrid(guesses, this.lettersToNumbers)
+    return new GuessingGrid(guesses, this.lettersToDigits)
   }
 
   private updateObviousGuesses(): GuessingGrid {
@@ -72,8 +72,8 @@ export default class GuessingGrid {
         continue
       }
 
-      Object.keys(this.lettersToNumbers).forEach((letter: Letter): void => {
-        Object.values(this.lettersToNumbers).forEach((digit: Digit): void => {
+      Object.keys(this.lettersToDigits).forEach((letter: Letter): void => {
+        Object.values(this.lettersToDigits).forEach((digit: Digit): void => {
           if (
             (letter !== yesGuess.letter && digit === yesGuess.digit) ||
             (digit !== yesGuess.digit && letter === yesGuess.letter)

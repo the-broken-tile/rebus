@@ -1,5 +1,6 @@
 #root,
-body {
+body,
+#app {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -8,7 +9,7 @@ body {
   overflow: hidden;
 }
 
-#root {
+#app {
   display: grid;
   height: 100vh;
   grid-template-rows: 40% 60%;
@@ -20,6 +21,11 @@ body {
   grid-template-columns: repeat(11, calc(100% / 11));
   grid-template-rows: repeat(10, 10%);
   user-select: none;
+}
+
+.base-12 .guessing {
+  grid-template-columns: repeat(13, calc(100% / 13));
+  grid-template-rows: repeat(12, calc(100% / 12));
 }
 
 .grid {
@@ -133,7 +139,7 @@ body {
 }
 
 @media (orientation: landscape) {
-  #root {
+  #app {
     display: grid;
     height: 100vh;
     grid-template-rows: none;
@@ -146,6 +152,11 @@ body {
     display: grid;
     grid-template-columns: repeat(11, calc(100% / 11));
     grid-template-rows: repeat(10, 10%);
+  }
+
+  .base-12 .guessing {
+    grid-template-columns: repeat(13, calc(100% / 13));
+    grid-template-rows: repeat(12, calc(100% / 12));
   }
 
   .grid {

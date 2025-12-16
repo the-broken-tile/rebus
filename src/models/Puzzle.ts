@@ -12,39 +12,39 @@ export type SerializedPuzzle = {
 export default class Puzzle {
   constructor(
     public readonly seed: string,
-    public readonly lettersToNumbers: Record<Letter, Digit>,
-    private grid: Grid<number, 3>,
+    public readonly lettersToDigits: Record<Letter, Digit>,
+    private grid: Grid<string, 3>,
     public readonly guessingGrid: GuessingGrid,
     private readonly matrix: Matrix,
-    public readonly base: number = 10,
+    public readonly base: number,
   ) {}
 
   get digitsToLetters(): Record<Digit, Letter> {
     const result: Record<Digit, Letter> = {} as Record<Digit, Letter>
-    for (const [letter, number] of Object.entries(this.lettersToNumbers)) {
-      result[number as Digit] = letter as Letter
+    for (const [letter, number] of Object.entries(this.lettersToDigits)) {
+      result[number] = letter as Letter
     }
 
-    return result as Record<Digit, Letter>
+    return result
   }
 
   get digits(): Digit[] {
-    return Object.values(this.lettersToNumbers)
+    return Object.values(this.lettersToDigits).sort(
+      (a: Digit, b: Digit): number =>
+        parseInt(a, this.base) - parseInt(b, this.base),
+    )
   }
 
   get letters(): Letter[] {
-    return Object.keys(this.lettersToNumbers) as Letter[]
+    return Object.keys(this.lettersToDigits)
   }
 
   get letterGrid(): Grid<string, 3> {
-    return this.grid.map((row: Tuple<number, 3>): Tuple<string, 3> => {
-      return row.map((n: number): string => {
-        return String(n)
+    return this.grid.map((row: Tuple<string, 3>): Tuple<string, 3> => {
+      return row.map((n: string): string => {
+        return n
           .split("")
-          .map(
-            (number: string): string =>
-              this.digitsToLetters[Number(number) as Digit],
-          )
+          .map((digit: Digit): string => this.digitsToLetters[digit])
           .join("")
       }) as Tuple<string, 3>
     }) as Grid<string, 3>
@@ -57,10 +57,11 @@ export default class Puzzle {
   public setGuesses(guesses: Guess[]): Puzzle {
     return new Puzzle(
       this.seed,
-      this.lettersToNumbers,
+      this.lettersToDigits,
       this.grid,
-      new GuessingGrid(guesses, this.lettersToNumbers),
+      new GuessingGrid(guesses, this.lettersToDigits),
       this.matrix,
+      this.base,
     )
   }
 
@@ -75,10 +76,11 @@ export default class Puzzle {
   ): Puzzle {
     return new Puzzle(
       this.seed,
-      this.lettersToNumbers,
+      this.lettersToDigits,
       this.grid,
       this.guessingGrid.setGuess(letter, digit, guess),
       this.matrix,
+      this.base,
     )
   }
 
@@ -91,13 +93,13 @@ export default class Puzzle {
       (g: Guess): boolean => g.value,
     )
 
-    if (yesGuesses.length !== Object.keys(this.lettersToNumbers).length) {
+    if (yesGuesses.length !== this.base) {
       return false
     }
 
     return yesGuesses.every(
       (guess: Guess): boolean =>
-        this.lettersToNumbers[guess.letter] === guess.digit,
+        this.lettersToDigits[guess.letter] === guess.digit,
     )
   }
 

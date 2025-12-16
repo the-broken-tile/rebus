@@ -10,26 +10,26 @@ import Variable from "../models/Variable"
 
 export default class MatrixBuilder {
   public build(
-    grid: Grid<number, 3>,
+    grid: Grid<string, 3>,
     lettersToNumber: Record<Letter, Digit>,
   ): Matrix {
     const matrix: Matrix = new Matrix()
     this.addGrid(grid, matrix, "horizontal", lettersToNumber)
-    const transposed: Grid<number, 3> = transpose<number, 3>(grid)
+    const transposed: Grid<string, 3> = transpose<string, 3>(grid)
     this.addGrid(transposed, matrix, "vertical", lettersToNumber)
 
     return matrix
   }
 
   private addGrid(
-    grid: Grid<number, 3>,
+    grid: Grid<string, 3>,
     matrix: Matrix,
     direction: Direction,
     lettersToNumber: Record<Letter, Digit>,
   ): void {
     for (const row of grid) {
       const equation: (Variable | Sign)[] = []
-      row.forEach((n: number, index: number): void => {
+      row.forEach((n: string, index: number): void => {
         equation.push(this.getVariable(n, lettersToNumber))
         if (index === row.length - 1) {
           return
@@ -43,10 +43,10 @@ export default class MatrixBuilder {
   }
 
   private getVariable(
-    n: number,
+    n: string,
     lettersToNumber: Record<Letter, Digit>,
   ): Variable {
-    const digits: Digit[] = String(n).split("").map(Number) as Digit[]
+    const digits: Digit[] = n.split("") as Digit[]
 
     return new Variable(
       digits,

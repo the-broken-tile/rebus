@@ -2,7 +2,7 @@ import config from "./config.json"
 
 import RandomNumberGenerator from "./services/RandomNumberGenerator"
 import GameGenerator from "./services/GameGenerator"
-import SymbolsProvider from "./services/LettersProvider"
+import SymbolsProvider from "./services/SymbolsProvider"
 import PuzzleProvider from "./services/PuzzleProvider"
 import Cache from "./services/Cache"
 import MatrixBuilder from "./services/MatrixBuilder"

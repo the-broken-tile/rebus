@@ -1,7 +1,7 @@
 import config from "../config.json"
 
 import Letter from "../models/Letter"
-import Digit from "../models/Digit"
+import Digit, { digits } from "../models/Digit"
 
 import RandomNumberGenerator from "./RandomNumberGenerator"
 
@@ -17,7 +17,7 @@ type Config = {
   seasonal: Season[]
 }
 
-export default class LettersProvider {
+export default class SymbolsProvider {
   private cache: Record<string, Letter[]> = {}
   private config: Config
   constructor(private readonly randomNumberGenerator: RandomNumberGenerator) {
@@ -44,7 +44,7 @@ export default class LettersProvider {
   }
 
   public getDigits(base: number): Digit[] {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    return digits.slice(0, base)
   }
 
   private pickSeasonal(): Letter[] {

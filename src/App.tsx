@@ -30,11 +30,12 @@ export default function App(): JSX.Element {
   const [hoveredDigit, setHoveredDigit] = useState<Digit | undefined>(undefined)
   const { time, start, stop } = useTimer()
   const { visible } = useDocumentVisibility()
+  const [hash] = useState((): string => window.location.hash)
 
   // Initial game loading
   useEffect((): void => {
-    setHistory(puzzleProvider.get())
-  }, [])
+    setHistory(puzzleProvider.get(hash.replace(/^#/, "")))
+  }, [hash])
 
   // Stop the timer when the game is solved.
   useEffect((): void => {
@@ -92,7 +93,7 @@ export default function App(): JSX.Element {
 
   useEffect((): (() => void) => {
     if (puzzle !== null) {
-      cache.setTime(puzzle.seed, time)
+      cache.setTime(puzzle, time)
     }
 
     return (): void => {
@@ -100,7 +101,7 @@ export default function App(): JSX.Element {
         return
       }
 
-      cache.setTime(puzzle.seed, time)
+      cache.setTime(puzzle, time)
     }
   }, [puzzle, time])
 
@@ -175,15 +176,17 @@ export default function App(): JSX.Element {
           onLetterHover: handleLetterHover,
         }}
       >
-        {debug && (
-          <div style={{ position: "absolute" }}>{formatDuration(time)}</div>
-        )}
-        <WinningDialog time={time} />
-        <GuessingGridComponent
-          onLeftClick={handleGuessClick}
-          onRightClick={handleRightClick}
-        />
-        <GridComponent />
+        <div id="app" className={`base-${puzzle.base}`}>
+          {debug && (
+            <div style={{ position: "absolute" }}>{formatDuration(time)}</div>
+          )}
+          <WinningDialog time={time} />
+          <GuessingGridComponent
+            onLeftClick={handleGuessClick}
+            onRightClick={handleRightClick}
+          />
+          <GridComponent />
+        </div>
       </HoveredContext>
     </PuzzleContext>
   )

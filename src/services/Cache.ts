@@ -1,4 +1,4 @@
-import Guess from "../models/Guess"
+import Guess, { SerializedGuess } from "../models/Guess"
 import Puzzle, { SerializedPuzzle } from "../models/Puzzle"
 
 type KeyType = "guesses" | "time"
@@ -6,9 +6,9 @@ type KeyType = "guesses" | "time"
 export default class Cache {
   constructor(private readonly prefix: string) {}
 
-  public getHistory(seed: string): Guess[][] | null {
+  public getHistory(seed: string, base: number = 10): Guess[][] | null {
     const serialized: string | null = localStorage.getItem(
-      this.key(seed, "guesses"),
+      this.key(seed, "guesses", base),
     )
     if (serialized === null) {
       this.purgeHistory(seed)
@@ -21,7 +21,7 @@ export default class Cache {
     return JSON.parse(serialized).map(
       (serialized: SerializedPuzzle): Guess[] => {
         return serialized.guesses.map(
-          (row: Record<string, any>): Guess => Guess.fromJSON(row),
+          (row: SerializedGuess): Guess => Guess.fromJSON(row),
         )
       },
     )
@@ -32,13 +32,17 @@ export default class Cache {
       return
     }
     const [puzzle] = history
-    const { seed } = puzzle
-    // debugger
-    localStorage.setItem(this.key(seed, "guesses"), JSON.stringify(history))
+    const { seed, base } = puzzle
+    localStorage.setItem(
+      this.key(seed, "guesses", base),
+      JSON.stringify(history),
+    )
   }
 
-  public getTime(seed: string): number {
-    const cached: string | null = localStorage.getItem(this.key(seed, "time"))
+  public getTime(seed: string, base: number = 10): number {
+    const cached: string | null = localStorage.getItem(
+      this.key(seed, "time", base),
+    )
 
     if (cached === null) {
       return 0
@@ -47,8 +51,11 @@ export default class Cache {
     return Number(cached)
   }
 
-  public setTime(seed: string, time: number): void {
-    localStorage.setItem(this.key(seed, "time"), String(time))
+  public setTime(puzzle: Puzzle, time: number): void {
+    localStorage.setItem(
+      this.key(puzzle.seed, "time", puzzle.base),
+      String(time),
+    )
   }
   /**
    * Deletes old records
@@ -65,7 +72,7 @@ export default class Cache {
     }
   }
 
-  private key(seed: string, type: KeyType): string {
-    return `${this.prefix}/${seed}/${type}`
+  private key(seed: string, type: KeyType, base: number = 10): string {
+    return `${this.prefix}/${seed}/${base}/${type}`
   }
 }

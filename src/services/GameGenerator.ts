@@ -2,7 +2,7 @@ import Puzzle from "../models/Puzzle"
 import Letter from "../models/Letter"
 import RandomNumberGenerator from "./RandomNumberGenerator"
 import Digit from "../models/Digit"
-import LettersProvider from "./LettersProvider"
+import SymbolsProvider from "./SymbolsProvider"
 import config from "../config.json"
 import GuessingGrid from "../models/GuessingGrid"
 import { Grid, Tuple } from "../Grid"
@@ -10,16 +10,16 @@ import Matrix from "../models/Matrix"
 import MatrixBuilder from "./MatrixBuilder"
 import transpose from "../util/transpose"
 import isValidBase from "../util/isValidBase"
+import BasedNumber from "../models/BasedNumber"
 
-const LARGEST_NUMBER = 999
-const SMALLEST_NUMBER = 100
+const NUMBER_OF_SYMBOLS = 3
 
 export default class GameGenerator {
   private cache: Record<string, Puzzle> = {}
 
   constructor(
     private readonly randomNumberGenerator: RandomNumberGenerator,
-    private readonly symbolsProvider: LettersProvider,
+    private readonly symbolsProvider: SymbolsProvider,
     private readonly matrixBuilder: MatrixBuilder,
   ) {}
   public generate(base: number): Puzzle {
@@ -31,35 +31,24 @@ export default class GameGenerator {
       return this.cache[this.randomNumberGenerator.seed]
     }
 
-    const numbers: Grid<number, 2> = this.generateNumber(base)
-
-    const grid: Grid<number, 3> = [
-      [numbers[0][0], numbers[0][1], this.sum(numbers[0])],
-      [numbers[1][0], numbers[1][1], numbers[1][0] + numbers[1][1]],
-      [
-        numbers[0][0] + numbers[1][0],
-        numbers[0][1] + numbers[1][1],
-        this.sum(numbers[0]) + this.sum(numbers[1]),
-      ],
-    ]
-
-    const lettersToNumbers: Record<Letter, Digit> =
-      this.lettersToNumbersMap(base)
-    const matrix: Matrix = this.matrixBuilder.build(grid, lettersToNumbers)
+    const numbers: Grid<string, 2> = this.generateNumbers(base)
+    const grid: Grid<string, 3> = this.createSummedGrid(numbers, base)
+    const lettersToDigits: Record<Letter, Digit> = this.lettersToDigits(base)
 
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
       this.randomNumberGenerator.seed,
-      lettersToNumbers,
+      lettersToDigits,
       grid,
-      GuessingGrid.create(lettersToNumbers),
-      matrix,
+      GuessingGrid.create(lettersToDigits),
+      new Matrix(), // @todo maybe use MatrixBuilder
+      base,
     )
 
     return this.cache[this.randomNumberGenerator.seed]
   }
 
-  private generateNumber(base: number): Grid<number, 2> {
-    let attempt: Grid<number, 2> = this.createAttempt(base)
+  private generateNumbers(base: number): Grid<string, 2> {
+    let attempt: Grid<string, 2> = this.createAttempt(base)
     let attemptsCount: number = 1
 
     while (!this.isValid(attempt, base)) {
@@ -68,48 +57,30 @@ export default class GameGenerator {
     }
 
     if (config.debug) {
-      let largestNumber: number = 0
-      let sum: number = 0
-      attempt.forEach((row: Tuple<number, 2>): void => {
-        row.forEach((n: number): void => {
-          largestNumber = Math.max(largestNumber, n)
-          sum += n
-        })
-      })
-      console.log({ attemptsCount, largestNumber, sum })
-      console.log(attempt)
+      console.log({ attemptsCount, base })
+      console.log(this.createSummedGrid(attempt, base))
     }
 
     return attempt
   }
 
-  private createAttempt(base: number): Grid<number, 2> {
-    const largetPossibleHere: number = LARGEST_NUMBER - 3 * SMALLEST_NUMBER
+  private createAttempt(base: number): Grid<string, 2> {
+    const smallestNumber: number = Math.pow(base, NUMBER_OF_SYMBOLS - 1)
+    const largestNumber: number = Math.pow(base, NUMBER_OF_SYMBOLS) - 1
+    const largetPossibleHere: number = largestNumber - 3 * smallestNumber
 
     return [
       [
-        this.randomNumberGenerator.randomInt(
-          SMALLEST_NUMBER,
-          largetPossibleHere,
-        ),
-        this.randomNumberGenerator.randomInt(
-          SMALLEST_NUMBER,
-          largetPossibleHere,
-        ),
+        this.randomInt(smallestNumber, largetPossibleHere, base),
+        this.randomInt(smallestNumber, largetPossibleHere, base),
       ],
       [
-        this.randomNumberGenerator.randomInt(
-          SMALLEST_NUMBER,
-          largetPossibleHere,
-        ),
-        this.randomNumberGenerator.randomInt(
-          SMALLEST_NUMBER,
-          largetPossibleHere,
-        ),
+        this.randomInt(smallestNumber, largetPossibleHere, base),
+        this.randomInt(smallestNumber, largetPossibleHere, base),
       ],
     ]
   }
-  private lettersToNumbersMap(base: number): Record<Letter, Digit> {
+  private lettersToDigits(base: number): Record<Letter, Digit> {
     const result: Letter[] = this.randomNumberGenerator.shuffle<Letter>(
       this.symbolsProvider.getLetters(base),
     )
@@ -129,50 +100,87 @@ export default class GameGenerator {
     )
   }
 
-  private isValid(attempt: Grid<number, 2>, base: number): boolean {
-    const transposed: Grid<number, 2> = transpose<number, 2>(attempt)
+  private isValid(attempt: Grid<string, 2>, base: number): boolean {
+    const transposed: Grid<string, 2> = transpose<string, 2>(attempt)
 
     return (
       this.validateAllDigitsArePresent(attempt, base) &&
-      attempt.every((r: Tuple<number, 2>): boolean => this.isRowInRange(r)) &&
-      transposed.every((r: Tuple<number, 2>): boolean =>
-        this.isRowInRange(r),
+      attempt.every((r: Tuple<string, 2>): boolean =>
+        this.isRowInRange(r, base),
+      ) &&
+      transposed.every((r: Tuple<string, 2>): boolean =>
+        this.isRowInRange(r, base),
       ) &&
       // Sum the whole for  the last number
-      this.isInRange(this.sum([...attempt[0], ...attempt[1]]))
+      this.isInRange(this.sum([...attempt[0], ...attempt[1]], base))
     )
   }
 
-  private isRowInRange(r: Tuple<number, 2>): boolean {
+  private isRowInRange(r: Tuple<string, 2>, base: number): boolean {
     return (
-      r.every((n: number): boolean => this.isInRange(n)) &&
-      this.isInRange(this.sum(r))
+      r.every((n: string): boolean => this.isInRange(n)) &&
+      this.isInRange(this.sum(r, base))
     )
   }
-  private isInRange(n: number): boolean {
-    return n >= SMALLEST_NUMBER && n <= LARGEST_NUMBER
+  private isInRange(n: string): boolean {
+    return n.length === NUMBER_OF_SYMBOLS
   }
 
   private validateAllDigitsArePresent(
-    attempt: Grid<number, 2>,
+    attempt: Grid<string, 2>,
     base: number,
   ): boolean {
-    const presetNumbers = new Set<number>()
-
-    attempt.forEach((row: Tuple<number, 2>): void => {
-      row.forEach((n: number): void => {
-        String(n)
-          .split("")
-          .forEach((digit: string): void => {
-            presetNumbers.add(Number(digit))
-          })
+    const presentDigits = new Set<Digit>()
+    const summedGrid: Grid<string, 3> = this.createSummedGrid(attempt, base)
+    summedGrid.forEach((row: Tuple<string, 3>): void => {
+      row.forEach((n: string): void => {
+        n.split("").forEach((digit: Digit): void => {
+          presentDigits.add(digit)
+        })
       })
     })
 
-    return presetNumbers.size === base
+    return presentDigits.size === base
   }
 
-  private sum(row: number[]): number {
-    return row.reduce((carry: number, n: number): number => carry + n, 0)
+  private sum(row: string[], base: number): string {
+    return row.reduce(
+      (carry: string, n: string): string => this.add(carry, n, base),
+      "0",
+    )
+  }
+
+  private add(number1: string, number2: string, base: number): string {
+    const baseNumber1 = new BasedNumber(number1.split("") as Digit[], base)
+    const baseNumber2 = new BasedNumber(number2.split("") as Digit[], base)
+
+    return baseNumber1.add(baseNumber2).toString()
+  }
+
+  /**
+   *
+   * @param from in decimal
+   * @param to in decimal
+   * @param base
+   *
+   * @return in target base
+   */
+  private randomInt(from: number, to: number, base: number): string {
+    return this.randomNumberGenerator.randomInt(from, to).toString(base)
+  }
+
+  private createSummedGrid(
+    grid: Grid<string, 2>,
+    base: number,
+  ): Grid<string, 3> {
+    return [
+      [grid[0][0], grid[0][1], this.sum(grid[0], base)],
+      [grid[1][0], grid[1][1], this.add(grid[1][0], grid[1][1], base)],
+      [
+        this.add(grid[0][0], grid[1][0], base),
+        this.add(grid[0][1], grid[1][1], base),
+        this.add(this.sum(grid[0], base), this.sum(grid[1], base), base),
+      ],
+    ]
   }
 }

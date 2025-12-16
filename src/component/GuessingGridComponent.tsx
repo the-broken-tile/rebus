@@ -55,14 +55,14 @@ export default function GuessingGridComponent({
               {letter}
             </div>
             {puzzle.digits.map(
-              (digit: Digit, key: number): JSX.Element => (
+              (digit: Digit): JSX.Element => (
                 <GuessingGridCellComponent
                   className={
                     letter === hoveredLetter || digit === hoveredDigit ?
                       "highlighted"
                     : undefined
                   }
-                  key={key}
+                  key={digit}
                   digit={digit}
                   onHover={(): void => handleHover(letter, digit)}
                   guess={puzzle.getGuess(letter, digit)}
