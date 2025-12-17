@@ -32,8 +32,8 @@ export default function WinningDialog({ time }: Props): JSX.Element {
   return (
     <Dialog id="winning-dialog" onClose={(): void => setIsOpen(false)}>
       <div>You win</div>
-      <div>{formatDuration(time)}</div>
       <div>{formatWithEmojis()}</div>
+      <div>{formatDuration(time)}</div>
     </Dialog>
   )
 }

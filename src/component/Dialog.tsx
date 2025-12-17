@@ -8,9 +8,12 @@ type Props = {
 
 export default function Dialog({ id, children, onClose }: Props): JSX.Element {
   return (
-    <div id={id} className="dialog">
-      <span id="close-dialog" onClick={onClose} />
-      {children}
-    </div>
+    <>
+      <div id={id} className="dialog">
+        <span className="close-dialog" onClick={onClose} />
+        {children}
+      </div>
+      <div className="dialog-backdrop"></div>
+    </>
   )
 }

@@ -105,9 +105,21 @@ body,
   left: 20%;
   bottom: 20%;
   right: 20%;
-  z-index: 2;
+  z-index: 3;
   background: whitesmoke;
   opacity: 0.9;
+  border-radius: 1rem;
+  border: 3px solid white;
+}
+
+.dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(122, 122, 122, 0.5);
+  z-index: 2;
 }
 
 #winning-dialog {
@@ -124,7 +136,7 @@ body,
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   flex-direction: column;
 }
 
@@ -139,6 +151,7 @@ body,
 }
 
 #how-to-play-header {
+  margin-top: 1rem;
   font-size: 1.1em;
   border-top: 1px solid gray;
   display: block;
@@ -149,15 +162,15 @@ body,
   margin-top: 0.5rem;
 }
 
-#close-dialog {
+.close-dialog {
   position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 1rem;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.5rem;
   padding: 0.5rem;
   cursor: pointer;
 }
-#close-dialog:after {
+.close-dialog:after {
   content: "x";
 }
 

@@ -116,7 +116,7 @@ export default function App(): JSX.Element {
   })
 
   const handleGuessClick = (letter: Letter, digit: Digit): void => {
-    if (puzzle === null) {
+    if (puzzle === null || puzzle.isSolved()) {
       return
     }
 
@@ -133,7 +133,7 @@ export default function App(): JSX.Element {
   }
 
   const handleRightClick = (letter: Letter, digit: Digit): void => {
-    if (puzzle === null) {
+    if (puzzle === null || puzzle.isSolved()) {
       return
     }
 
