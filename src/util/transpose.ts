@@ -1,4 +1,4 @@
-import { Grid } from "../Grid"
+import { Grid } from "../models/Grid"
 
 export default function transpose<T, N extends number>(
   matrix: Grid<T, N>,

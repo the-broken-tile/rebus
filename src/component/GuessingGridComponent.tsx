@@ -2,8 +2,8 @@ import { Fragment, JSX, useContext } from "react"
 import Letter from "../models/Letter"
 import Digit from "../models/Digit"
 import GuessingGridCellComponent from "./GuessingGridCellComponent"
-import HoveredContext from "../HoveredContext"
-import { usePuzzleContext } from "../PuzzleContext"
+import HoveredContext from "../context/HoveredContext"
+import { usePuzzleContext } from "../context/PuzzleContext"
 
 type Props = {
   onLeftClick: (letter: Letter, digit: Digit) => void

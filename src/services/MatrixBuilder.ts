@@ -1,4 +1,4 @@
-import { Grid } from "../Grid"
+import { Grid } from "../models/Grid"
 import Matrix from "../models/Matrix"
 import Sign from "../models/Sign"
 import Equation from "../models/Equation"

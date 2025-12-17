@@ -1,5 +1,5 @@
 import Letter from "./Letter"
-import { Grid, Tuple } from "../Grid"
+import { Grid, Tuple } from "./Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"

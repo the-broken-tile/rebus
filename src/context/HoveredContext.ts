@@ -1,6 +1,6 @@
 import { createContext } from "react"
-import Letter from "./models/Letter"
-import Digit from "./models/Digit"
+import Letter from "../models/Letter"
+import Digit from "../models/Digit"
 
 type Type = {
   letter?: Letter

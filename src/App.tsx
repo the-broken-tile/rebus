@@ -1,13 +1,13 @@
 import { JSX, useEffect, useState, useRef, RefObject } from "react"
-import { puzzleProvider, cache } from "./container"
+import { puzzleProvider, cache } from "./services/container"
 import "./app.css"
 import Puzzle from "./models/Puzzle"
 import Letter from "./models/Letter"
 import Digit from "./models/Digit"
 import config from "./config.json"
 
-import HoveredContext from "./HoveredContext"
-import PuzzleContext from "./PuzzleContext"
+import HoveredContext from "./context/HoveredContext"
+import PuzzleContext from "./context/PuzzleContext"
 
 import GridComponent from "./component/GridComponent"
 import GuessingGridComponent from "./component/GuessingGridComponent"
@@ -18,7 +18,7 @@ import useTimer from "./hooks/useTimer"
 import useDocumentVisibility from "./hooks/useDocumentVisibility"
 import formatDuration from "./util/formatTime"
 import InfoButton from "./component/InfoButton"
-import AppRefContext from "./AppRefContext"
+import AppRefContext from "./context/AppRefContext"
 
 const { debug } = config
 

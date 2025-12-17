@@ -1,9 +1,9 @@
 import { Fragment, JSX } from "react"
-import { Tuple } from "../Grid"
+import { Tuple } from "../models/Grid"
 import DigitComponent from "./DigitComponent"
 import SignComponent from "./SignComponent"
 import Sign from "../models/Sign"
-import { usePuzzleContext } from "../PuzzleContext"
+import { usePuzzleContext } from "../context/PuzzleContext"
 import UndoButton from "./UndoButton"
 
 export default function GridComponent(): JSX.Element {

@@ -2,8 +2,8 @@ import { JSX, useContext } from "react"
 import split from "../util/split"
 import Letter from "../models/Letter"
 import Digit from "../models/Digit"
-import HoveredContext from "../HoveredContext"
-import { usePuzzleContext } from "../PuzzleContext"
+import HoveredContext from "../context/HoveredContext"
+import { usePuzzleContext } from "../context/PuzzleContext"
 
 type Props = {
   letters: string

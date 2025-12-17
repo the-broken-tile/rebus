@@ -1,11 +1,11 @@
-import config from "./config.json"
+import config from "../config.json"
 
-import RandomNumberGenerator from "./services/RandomNumberGenerator"
-import GameGenerator from "./services/GameGenerator"
-import SymbolsProvider from "./services/SymbolsProvider"
-import PuzzleProvider from "./services/PuzzleProvider"
-import Cache from "./services/Cache"
-import MatrixBuilder from "./services/MatrixBuilder"
+import RandomNumberGenerator from "./RandomNumberGenerator"
+import GameGenerator from "./GameGenerator"
+import SymbolsProvider from "./SymbolsProvider"
+import PuzzleProvider from "./PuzzleProvider"
+import Cache from "./Cache"
+import MatrixBuilder from "./MatrixBuilder"
 
 const randomNumberGenerator: RandomNumberGenerator = new RandomNumberGenerator(
   config.debug ? "1337" : new Date().toDateString(),

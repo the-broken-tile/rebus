@@ -1,5 +1,5 @@
 import { JSX } from "react"
-import { usePuzzleContext } from "../PuzzleContext"
+import { usePuzzleContext } from "../context/PuzzleContext"
 
 type Props = {
   type: "landscape" | "portrait"
