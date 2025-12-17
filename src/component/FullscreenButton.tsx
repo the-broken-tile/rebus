@@ -15,7 +15,7 @@ export default function FullscreenButton({ ref }: Props): JSX.Element {
   }
 
   return (
-    <button onClick={toggleFullscreen} id="fullscreen-button">
+    <button onClick={toggleFullscreen} id="fullscreen-button" className="button">
       Fullscreen
     </button>
   )
