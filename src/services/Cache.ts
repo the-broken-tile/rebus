@@ -63,7 +63,11 @@ export default class Cache {
   private purgeHistory(seed: string): void {
     for (let i: number = 0, l: number = localStorage.length; i < l; i++) {
       const k: string | null = localStorage.key(i)
-      if (k === null || k.startsWith(`${this.prefix}/${seed}`)) {
+      if (
+        k === null ||
+        k.startsWith(`${this.prefix}/${seed}`) ||
+        !k.startsWith(this.prefix)
+      ) {
         // skip anything that's the current seed or not prefixed with this app's prefix.
         continue
       }
