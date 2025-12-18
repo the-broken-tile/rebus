@@ -1,3 +1,7 @@
+body {
+  background-color: black;
+  color: white;
+}
 #root,
 body,
 #app {
@@ -7,6 +11,9 @@ body,
   font-size: 18px;
   height: 100vh;
   overflow: hidden;
+}
+a {
+  color: lavender;
 }
 
 #app {
@@ -91,7 +98,7 @@ body,
 }
 
 .highlighted {
-  background: rgba(166, 166, 166, 0.1);
+  background: rgba(200, 200, 200, 0.2);
 }
 
 .digit {
@@ -106,7 +113,7 @@ body,
   bottom: 20%;
   right: 20%;
   z-index: 3;
-  background: whitesmoke;
+  background: black;
   opacity: 0.9;
   border-radius: 1rem;
   border: 3px solid white;
@@ -118,14 +125,13 @@ body,
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(122, 122, 122, 0.5);
+  background: rgba(200, 200, 200, 0.5);
   z-index: 2;
 }
 
 #winning-dialog {
   display: flex;
   justify-content: center;
-  /*align-items: center;*/
   text-align: center;
   font-size: 3em;
   flex-direction: column;
@@ -136,7 +142,7 @@ body,
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   flex-direction: column;
 }
 
@@ -223,31 +229,14 @@ body,
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: black;
-    color: white;
-  }
-
-  .dialog {
-    background: black;
-    opacity: 1;
-  }
-  a {
-    color: lavender;
-  }
-  .highlighted {
-    background: rgba(200, 200, 200, 0.2);
-  }
-}
 /** https://getcssscan.com/css-buttons-examples */
 .button {
   appearance: none;
   backface-visibility: hidden;
   background-color: #27ae60;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border-style: none;
-  box-shadow: rgba(39, 174, 96, 0.15) 0 4px 9px;
+  box-shadow: rgba(39, 174, 96, 0.5) 0 0.25rem 0.5rem;
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
@@ -266,7 +255,7 @@ body,
   line-height: 1.5;
   outline: none;
   overflow: hidden;
-  padding: 13px 20px;
+  padding: 0.5rem 1rem;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -292,5 +281,5 @@ body,
 }
 
 .button:hover {
-  box-shadow: rgba(39, 174, 96, 0.2) 0 6px 12px;
+  box-shadow: rgba(39, 174, 96, 0.5) 0 0.3rem 0.55rem;
 }
