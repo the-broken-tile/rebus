@@ -72,16 +72,16 @@ export default class GuessingGrid {
         continue
       }
 
-      Object.keys(this.lettersToDigits).forEach((letter: Letter): void => {
-        Object.values(this.lettersToDigits).forEach((digit: Digit): void => {
+      for (const letter of Object.keys(this.lettersToDigits)) {
+        for (const digit of Object.values(this.lettersToDigits)) {
           if (
             (letter !== yesGuess.letter && digit === yesGuess.digit) ||
             (digit !== yesGuess.digit && letter === yesGuess.letter)
           ) {
             result = result._setGuess(letter, digit, false)
           }
-        })
-      })
+        }
+      }
     }
 
     return result

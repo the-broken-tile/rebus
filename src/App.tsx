@@ -47,7 +47,7 @@ export default function App(): JSX.Element {
     }
 
     stop()
-  }, [solved])
+  }, [solved, stop])
 
   // Start and stop the timer on losing focus of the window.
   useEffect((): void => {
@@ -58,7 +58,7 @@ export default function App(): JSX.Element {
     }
 
     stop()
-  }, [visible, solved])
+  }, [visible, solved, puzzle, start, stop])
 
   // Check whether puzzle is solved.
   useEffect((): void => {
@@ -78,21 +78,21 @@ export default function App(): JSX.Element {
       setPuzzle(currentState)
     }
     cache.save(history)
-  }, [history.length])
+  }, [history])
 
   // Start the timer as soon as the puzzle is loaded.
   useEffect((): void => {
     if (puzzle !== null) {
       start(cache.getTime(puzzle.seed))
     }
-  }, [puzzle])
+  }, [puzzle, start])
 
   // Stop the timer when the puzzle is solved.
   useEffect((): void => {
     if (solved) {
       stop()
     }
-  }, [solved])
+  }, [solved, stop])
 
   useEffect((): (() => void) => {
     if (puzzle !== null) {
