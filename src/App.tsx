@@ -9,9 +9,9 @@ import config from "./config.json"
 import HoveredContext from "./context/HoveredContext"
 import PuzzleContext from "./context/PuzzleContext"
 
-import GridComponent from "./component/GridComponent"
+import GridView from "./view/GridView"
 import GuessingGridComponent from "./component/GuessingGridComponent"
-import WinningDialog from "./component/WinningDialog"
+import WinningDialog from "./view/WinningDialog"
 
 import useKeyPress from "./hooks/useKeyPress"
 import useTimer from "./hooks/useTimer"
@@ -189,7 +189,7 @@ export default function App(): JSX.Element {
               onLeftClick={handleGuessClick}
               onRightClick={handleRightClick}
             />
-            <GridComponent />
+            <GridView />
             <InfoButton />
           </AppRefContext>
         </div>

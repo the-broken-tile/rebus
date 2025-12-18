@@ -1,12 +1,12 @@
 import { Fragment, JSX } from "react"
 import { Tuple } from "../models/Grid"
-import DigitComponent from "./DigitComponent"
-import SignComponent from "./SignComponent"
+import SignComponent from "../component/SignComponent"
 import Sign from "../models/Sign"
 import { usePuzzleContext } from "../context/PuzzleContext"
 import UndoButton from "./UndoButton"
+import DigitView from "./DigitView"
 
-export default function GridComponent(): JSX.Element {
+export default function GridView(): JSX.Element {
   const { puzzle } = usePuzzleContext()
 
   const signsBetweenRows = (
@@ -50,9 +50,7 @@ export default function GridComponent(): JSX.Element {
             {row.map(
               (letters: string, colNumber: number): JSX.Element => (
                 <Fragment key={colNumber}>
-                  <div className="number">
-                    <DigitComponent key={colNumber} letters={letters} />
-                  </div>
+                  <DigitView key={colNumber} letters={letters} />
                   {colNumber !== row.length - 1 ?
                     <SignComponent sign={colNumber === 0 ? "+" : "="}>
                       {rowNumber === 0 && colNumber === row.length - 2 ?

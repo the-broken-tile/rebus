@@ -9,7 +9,7 @@ type Props = {
   letters: string
 }
 
-export default function DigitComponent({ letters }: Props): JSX.Element {
+export default function DigitView({ letters }: Props): JSX.Element {
   const { puzzle } = usePuzzleContext()
 
   const {
@@ -49,7 +49,7 @@ export default function DigitComponent({ letters }: Props): JSX.Element {
   }
 
   return (
-    <>
+    <div className="number">
       {split(letters).map(
         (letter: string, key: number): JSX.Element => (
           <span
@@ -62,6 +62,6 @@ export default function DigitComponent({ letters }: Props): JSX.Element {
           </span>
         ),
       )}
-    </>
+    </div>
   )
 }

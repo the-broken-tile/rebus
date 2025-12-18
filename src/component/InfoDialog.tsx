@@ -12,6 +12,17 @@ export default function InfoDialog({ onClose }: Props): JSX.Element {
 
   return (
     <Dialog id="info-dialog" onClose={onClose}>
+      <header id="how-to-play-header">How to play:</header>
+      <ul id="how-to-play">
+        <li>Each symbol corresponds to exactly one number.</li>
+        <li>All digits are present.</li>
+        <li>Numbers cannot start with a 0.</li>
+        <li>Right click or long tap to select an invalid option ❌</li>
+        <li>Left click or tap to confirm a correct match ✅</li>
+        <li>
+          Once you have all the numbers correct, you will see a victory screen.
+        </li>
+      </ul>
       <div>
         If you like what I'm doing you can buy me a ko-fi at{" "}
         <a
@@ -34,17 +45,6 @@ export default function InfoDialog({ onClose }: Props): JSX.Element {
         </a>
         .
       </div>
-      <header id="how-to-play-header">How to play:</header>
-      <ul id="how-to-play">
-        <li>Each symbol corresponds to exactly one number.</li>
-        <li>All digits are present.</li>
-        <li>Numbers cannot start with a 0.</li>
-        <li>Right click or long tap to select an invalid option ❌</li>
-        <li>Left click or tap to confirm a correct match ✅</li>
-        <li>
-          Once you have all the numbers correct, you will see a victory screen.
-        </li>
-      </ul>
       <FullscreenButton ref={ref} />
     </Dialog>
   )

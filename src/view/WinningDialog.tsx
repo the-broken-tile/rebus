@@ -1,5 +1,5 @@
 import { JSX, useState } from "react"
-import Dialog from "./Dialog"
+import Dialog from "../component/Dialog"
 import { usePuzzleContext } from "../context/PuzzleContext"
 import formatDuration from "../util/formatTime"
 import Digit from "../models/Digit"
