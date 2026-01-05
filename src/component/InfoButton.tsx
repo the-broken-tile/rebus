@@ -1,23 +1,13 @@
-import { JSX, useState } from "react"
-import InfoDialog from "./InfoDialog"
+import { JSX } from "react"
 
-export default function InfoButton(): JSX.Element {
-  const [open, setOpen] = useState<boolean>(false)
+type Props = {
+  onClick: () => void
+}
 
-  const handleClick = (): void => {
-    setOpen((oldValue: boolean): boolean => !oldValue)
-  }
-
-  const handleClose = (): void => {
-    setOpen(false)
-  }
-
+export default function InfoButton({ onClick }: Props): JSX.Element {
   return (
-    <>
-      {open && <InfoDialog onClose={handleClose} />}
-      <span role="button" className="info" onClick={handleClick}>
-        ⁉️
-      </span>
-    </>
+    <span role="button" className="info" onClick={onClick}>
+      ⁉️
+    </span>
   )
 }

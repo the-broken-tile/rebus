@@ -3,7 +3,6 @@ import Puzzle from "../models/Puzzle"
 
 type ContextShape = {
   puzzle: Puzzle
-  undo: () => void
 }
 const PuzzleContext: Context<ContextShape | undefined> = createContext<
   ContextShape | undefined

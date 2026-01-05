@@ -19,6 +19,8 @@ import useDocumentVisibility from "./hooks/useDocumentVisibility"
 import formatDuration from "./util/formatTime"
 import InfoButton from "./component/InfoButton"
 import AppRefContext from "./context/AppRefContext"
+import UndoButton from "./component/UndoButton"
+import InfoDialog from "./component/InfoDialog"
 
 const { debug } = config
 
@@ -30,6 +32,7 @@ export default function App(): JSX.Element {
     undefined,
   )
   const [hoveredDigit, setHoveredDigit] = useState<Digit | undefined>(undefined)
+  const [infoOpen, setInfoOpen] = useState<boolean>(false)
   const { time, start, stop } = useTimer()
   const { visible } = useDocumentVisibility()
   const [hash] = useState((): string => window.location.hash)
@@ -165,12 +168,16 @@ export default function App(): JSX.Element {
     setHistory(history.slice(0, history.length - 1))
   }
 
+  const handleInfoClick = (): void => {
+    setInfoOpen((oldValue: boolean): boolean => !oldValue)
+  }
+
   if (puzzle === null) {
     return <>loading</>
   }
 
   return (
-    <PuzzleContext value={{ puzzle, undo }}>
+    <PuzzleContext value={{ puzzle }}>
       <HoveredContext
         value={{
           digit: hoveredDigit,
@@ -190,7 +197,11 @@ export default function App(): JSX.Element {
               onRightClick={handleRightClick}
             />
             <GridView />
-            <InfoButton />
+            {infoOpen && <InfoDialog onClose={handleInfoClick} />}
+            <div id="buttons">
+              <InfoButton onClick={handleInfoClick} />
+              <UndoButton onClick={undo} />
+            </div>
           </AppRefContext>
         </div>
       </HoveredContext>
