@@ -6,8 +6,6 @@ import SymbolsProvider from "./SymbolsProvider"
 import config from "../config.json"
 import GuessingGrid from "../models/GuessingGrid"
 import { Grid, Tuple } from "../models/Grid"
-import Matrix from "../models/Matrix"
-import MatrixBuilder from "./MatrixBuilder"
 import transpose from "../util/transpose"
 import isValidBase from "../util/isValidBase"
 import BasedNumber from "../models/BasedNumber"
@@ -20,7 +18,6 @@ export default class GameGenerator {
   constructor(
     private readonly randomNumberGenerator: RandomNumberGenerator,
     private readonly symbolsProvider: SymbolsProvider,
-    private readonly matrixBuilder: MatrixBuilder,
   ) {}
   public generate(base: number): Puzzle {
     if (!isValidBase(base)) {
@@ -40,7 +37,6 @@ export default class GameGenerator {
       lettersToDigits,
       grid,
       GuessingGrid.create(lettersToDigits),
-      new Matrix(), // @todo maybe use MatrixBuilder
       base,
     )
 
