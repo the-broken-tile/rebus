@@ -91,32 +91,51 @@
   ],
   "seasonal": [
     {
+      "title": "Christmas",
       "from": "2025-12-15",
       "to": "2026-01-05",
       "letters": ["🎄", "🎅🏻", "🎁", "☃️", "👼", "🤶", "🦌"],
       "pick": 3
     },
     {
+      "title": "Saint Valentine's",
       "from": "2026-02-14",
       "to": "2026-02-15",
       "letters": ["🎀", "💋", "🌹", "🧸", "👫", "😻", "💝", "🎁", "💘", "😍"],
       "pick": 10
     },
     {
+      "title": "Baba Marta",
       "from": "2026-03-01",
       "to": "2026-03-07",
       "letters": ["⚪️", "🔴"],
       "pick": 2
     },
     {
+      "title": "International Women's Day",
       "from": "2026-03-08",
       "to": "2026-03-09",
       "letters": ["👗", "💅🏻", "💐", "🙆🏼‍♀️", "👰🏻‍♀️", "👯‍♀️", "💃🏻", "🦄", "🎊", "💝"],
       "pick": 10
     },
     {
+      "title": "Baba Marta",
       "from": "2026-03-09",
-      "to": "2026-04-03",
+      "to": "2026-03-17",
+      "letters": ["⚪️", "🔴"],
+      "pick": 2
+    },
+    {
+      "title": "Saint Patrick's Day",
+      "from": "2026-03-17",
+      "to": "2026-03-18",
+      "letters": ["🍀", "🇮🇪", "🍻", "⛪️", "🟢"],
+      "pick": 5
+    },
+    {
+      "title": "Baba Marta",
+      "from": "2026-03-18",
+      "to": "2026-04-01",
       "letters": ["⚪️", "🔴"],
       "pick": 2
     }

@@ -2,7 +2,7 @@ import { JSX } from "react"
 import Dialog from "./Dialog"
 import koFi from "../assets/ko-fi.png"
 import FullscreenButton from "./FullscreenButton"
-import {AppRef, useAppRefContext} from "../context/AppRefContext"
+import { AppRef, useAppRefContext } from "../context/AppRefContext"
 
 type Props = {
   onClose: () => void

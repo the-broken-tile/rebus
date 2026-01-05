@@ -4,7 +4,7 @@ import SignComponent from "../component/SignComponent"
 import Sign from "../models/Sign"
 import { usePuzzleContext } from "../context/PuzzleContext"
 import UndoButton from "./UndoButton"
-import DigitView from "./DigitView"
+import NumberView from "./NumberView"
 
 export default function GridView(): JSX.Element {
   const { puzzle } = usePuzzleContext()
@@ -50,7 +50,7 @@ export default function GridView(): JSX.Element {
             {row.map(
               (letters: string, colNumber: number): JSX.Element => (
                 <Fragment key={colNumber}>
-                  <DigitView key={colNumber} letters={letters} />
+                  <NumberView key={colNumber} letters={letters} />
                   {colNumber !== row.length - 1 ?
                     <SignComponent sign={colNumber === 0 ? "+" : "="}>
                       {rowNumber === 0 && colNumber === row.length - 2 ?

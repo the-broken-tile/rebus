@@ -1,4 +1,4 @@
-import { createContext } from "react"
+import { createContext, useContext } from "react"
 import Letter from "../models/Letter"
 import Digit from "../models/Digit"
 
@@ -15,5 +15,9 @@ const HoveredContext = createContext<Type>({
   onDigitHover: () => {},
   onLetterHover: () => {},
 })
+
+export function useHoveredContext(): Type {
+  return useContext(HoveredContext)
+}
 
 export default HoveredContext
