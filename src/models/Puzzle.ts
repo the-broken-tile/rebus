@@ -3,6 +3,7 @@ import { Grid, Tuple } from "./Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"
+import sign, { signs } from "./Sign"
 
 export type SerializedPuzzle = {
   guesses: SerializedGuess[]
@@ -12,7 +13,7 @@ export default class Puzzle {
   constructor(
     public readonly seed: string,
     public readonly lettersToDigits: Record<Letter, Digit>,
-    private grid: Grid<string, 3>,
+    private grid: Grid<string, 5>,
     public readonly guessingGrid: GuessingGrid,
     public readonly base: number,
   ) {}
@@ -37,15 +38,19 @@ export default class Puzzle {
     return Object.keys(this.lettersToDigits)
   }
 
-  get letterGrid(): Grid<string, 3> {
-    return this.grid.map((row: Tuple<string, 3>): Tuple<string, 3> => {
+  get letterGrid(): Grid<string, 5> {
+    return this.grid.map((row: Tuple<string, 5>): Tuple<string, 5> => {
       return row.map((n: string): string => {
+        if (signs.includes(n) || n === "") {
+          return n
+        }
+
         return n
           .split("")
           .map((digit: Digit): string => this.digitsToLetters[digit])
           .join("")
-      }) as Tuple<string, 3>
-    }) as Grid<string, 3>
+      }) as Tuple<string, 5>
+    }) as Grid<string, 5>
   }
 
   get guesses(): Guess[] {

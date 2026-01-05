@@ -3,7 +3,7 @@ import Sign from "../models/Sign"
 
 type Props = {
   sign: Sign
-  children: ReactNode
+  children?: ReactNode
 }
 
 export default function SignComponent({ sign, children }: Props): JSX.Element {

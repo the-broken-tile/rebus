@@ -1,4 +1,4 @@
-import GameGenerator from "./GameGenerator"
+import GameGeneratorInterface from "./GameGenerator/GameGeneratorInterface"
 import Puzzle from "../models/Puzzle"
 import Guess from "../models/Guess"
 import Cache from "./Cache"
@@ -7,7 +7,7 @@ const DEFAULT_BASE: number = 10
 
 export default class PuzzleProvider {
   constructor(
-    private readonly gameGenerator: GameGenerator,
+    private readonly gameGenerator: GameGeneratorInterface,
     private readonly cache: Cache,
   ) {}
 

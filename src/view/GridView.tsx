@@ -1,69 +1,22 @@
 import { Fragment, JSX } from "react"
 import { Tuple } from "../models/Grid"
-import SignComponent from "../component/SignComponent"
 import Sign from "../models/Sign"
 import { usePuzzleContext } from "../context/PuzzleContext"
-import UndoButton from "./UndoButton"
-import NumberView from "./NumberView"
+import GridCellView from "./GridCellView"
 
 export default function GridView(): JSX.Element {
   const { puzzle } = usePuzzleContext()
 
-  const signsBetweenRows = (
-    numberOfColumns: number,
-    beforeLastRow: boolean,
-  ): Sign[] => {
-    return Array.from<Sign>({ length: numberOfColumns }).fill(
-      beforeLastRow ? "=" : "+",
-    )
-  }
-
-  const emptyRow = (
-    beforeLastRow: boolean,
-    numberOfColumns: number,
-  ): JSX.Element => {
-    const signs: Sign[] = signsBetweenRows(numberOfColumns, beforeLastRow)
-
-    return (
-      <>
-        {signs.map(
-          (sign: Sign, key: number): JSX.Element => (
-            <Fragment key={key}>
-              <SignComponent sign={sign}>
-                {beforeLastRow && key === signs.length - 1 ?
-                  <UndoButton type="portrait" />
-                : null}
-              </SignComponent>
-              {key !== signs.length - 1 && <div></div>}
-            </Fragment>
-          ),
-        )}
-      </>
-    )
-  }
-
   return (
     <div className="grid">
       {puzzle.letterGrid.map(
-        (row: Tuple<string, 3>, rowNumber: number): JSX.Element => (
+        (row: Tuple<string, 5>, rowNumber: number): JSX.Element => (
           <Fragment key={rowNumber}>
             {row.map(
-              (letters: string, colNumber: number): JSX.Element => (
-                <Fragment key={colNumber}>
-                  <NumberView key={colNumber} letters={letters} />
-                  {colNumber !== row.length - 1 ?
-                    <SignComponent sign={colNumber === 0 ? "+" : "="}>
-                      {rowNumber === 0 && colNumber === row.length - 2 ?
-                        <UndoButton type="landscape" />
-                      : null}
-                    </SignComponent>
-                  : null}
-                </Fragment>
-              ),
+              (value: string | Sign | "", colNumber: number): JSX.Element => {
+                return <GridCellView key={colNumber} value={value} />
+              },
             )}
-            {rowNumber !== puzzle.letterGrid.length - 1 ?
-              emptyRow(rowNumber === puzzle.letterGrid.length - 2, row.length)
-            : null}
           </Fragment>
         ),
       )}

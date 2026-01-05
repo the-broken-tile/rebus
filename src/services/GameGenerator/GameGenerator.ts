@@ -1,18 +1,19 @@
-import Puzzle from "../models/Puzzle"
-import Letter from "../models/Letter"
-import RandomNumberGenerator from "./RandomNumberGenerator"
-import Digit from "../models/Digit"
-import SymbolsProvider from "./SymbolsProvider"
-import config from "../config.json"
-import GuessingGrid from "../models/GuessingGrid"
-import { Grid, Tuple } from "../models/Grid"
-import transpose from "../util/transpose"
-import isValidBase from "../util/isValidBase"
-import BasedNumber from "../models/BasedNumber"
+import Puzzle from "../../models/Puzzle"
+import Letter from "../../models/Letter"
+import RandomNumberGenerator from "../RandomNumberGenerator"
+import Digit from "../../models/Digit"
+import SymbolsProvider from "../SymbolsProvider"
+import config from "../../config.json"
+import GuessingGrid from "../../models/GuessingGrid"
+import { Grid, Tuple } from "../../models/Grid"
+import transpose from "../../util/transpose"
+import isValidBase from "../../util/isValidBase"
+import BasedNumber from "../../models/BasedNumber"
+import GameGeneratorInterface from "./GameGeneratorInterface"
 
 const NUMBER_OF_SYMBOLS = 3
 
-export default class GameGenerator {
+export default class GameGenerator implements GameGeneratorInterface {
   private cache: Record<string, Puzzle> = {}
 
   constructor(
@@ -29,13 +30,13 @@ export default class GameGenerator {
     }
 
     const numbers: Grid<string, 2> = this.generateNumbers(base)
-    const grid: Grid<string, 3> = this.createSummedGrid(numbers, base)
+    const expandedGrid: Grid<string, 5> = this.createExpandedGrid(numbers, base)
     const lettersToDigits: Record<Letter, Digit> = this.lettersToDigits(base)
 
     this.cache[this.randomNumberGenerator.seed] = new Puzzle(
       this.randomNumberGenerator.seed,
       lettersToDigits,
-      grid,
+      expandedGrid,
       GuessingGrid.create(lettersToDigits),
       base,
     )
@@ -54,7 +55,7 @@ export default class GameGenerator {
 
     if (config.debug) {
       console.log({ attemptsCount, base })
-      console.log(this.createSummedGrid(attempt, base))
+      console.log(this.createExpandedGrid(attempt, base))
     }
 
     return attempt
@@ -175,6 +176,31 @@ export default class GameGenerator {
       [
         this.add(grid[0][0], grid[1][0], base),
         this.add(grid[0][1], grid[1][1], base),
+        this.add(this.sum(grid[0], base), this.sum(grid[1], base), base),
+      ],
+    ]
+  }
+
+  private createExpandedGrid(
+    grid: Grid<string, 2>,
+    base: number,
+  ): Grid<string, 5> {
+    return [
+      [grid[0][0], "+", grid[0][1], "=", this.sum(grid[0], base)],
+      ["+", "", "+", "", "+"],
+      [
+        grid[1][0],
+        "+",
+        grid[1][1],
+        "=",
+        this.add(grid[1][0], grid[1][1], base),
+      ],
+      ["=", "", "=", "", "="],
+      [
+        this.add(grid[0][0], grid[1][0], base),
+        "+",
+        this.add(grid[0][1], grid[1][1], base),
+        "=",
         this.add(this.sum(grid[0], base), this.sum(grid[1], base), base),
       ],
     ]
