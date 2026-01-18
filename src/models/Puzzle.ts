@@ -3,7 +3,7 @@ import { Grid, Tuple } from "./Grid"
 import Digit from "./Digit"
 import GuessingGrid from "./GuessingGrid"
 import Guess, { SerializedGuess } from "./Guess"
-import sign, { signs } from "./Sign"
+import { signs } from "./Sign"
 
 export type SerializedPuzzle = {
   guesses: SerializedGuess[]
